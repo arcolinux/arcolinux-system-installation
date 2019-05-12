@@ -3,5 +3,5 @@ Type=Application
 Name=Install ArcoLinux
 Comment=Installer for ArcoLinux
 Categories=Utility;
-Exec=env QT_QPA_PLATFORMTHEME=Arc pkexec calamares
+Exec=pkexec --disable-internal-agent /usr/bin/calamares
 Icon=arco-calamares
