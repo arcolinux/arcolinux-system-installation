@@ -3,5 +3,5 @@ Type=Application
 Name=Install ArcoLinux with debugging mode on
 Comment=Installer for ArcoLinux to debug
 Categories=Utility;
-Exec=pkexec calamares -d
+Exec=pkexec calamares -d > /home/liveuser/calamares-installation.log
 Icon=arco-calamares
