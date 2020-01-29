@@ -2,6 +2,6 @@
 Type=Application
 Name=Install ArcoLinux debug mode on
 Comment=Installer for ArcoLinux to debug
-Categories=GTK;Settings;Security;X-GNOME-Settings-Panel;X-GNOME-SystemSettings;X-Unity-Settings-Panel;X-XFCE-SettingsDialog;X-XFCE-SystemSettings;Utility
+Categories=GTK;Settings;Security;X-GNOME-Settings-Panel;X-GNOME-SystemSettings;X-Unity-Settings-Panel;X-XFCE-SettingsDialog;X-XFCE-SystemSettings;Utility;system
 Exec=pkexec calamares -d
 Icon=arco-calamares
