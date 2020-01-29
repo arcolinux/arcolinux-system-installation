@@ -1,5 +1,0 @@
-#!/bin/bash
-
-#update-grub during calamares
-
-grub-mkconfig -o /boot/grub/grub.cfg

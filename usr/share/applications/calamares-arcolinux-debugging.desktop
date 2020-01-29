@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=Install ArcoLinux with debugging mode on
+Name=Install ArcoLinux debug mode on
 Comment=Installer for ArcoLinux to debug
-Categories=Utility;
+Categories=GTK;Settings;Security;X-GNOME-Settings-Panel;X-GNOME-SystemSettings;X-Unity-Settings-Panel;X-XFCE-SettingsDialog;X-XFCE-SystemSettings;Utility
 Exec=pkexec calamares -d
 Icon=arco-calamares
