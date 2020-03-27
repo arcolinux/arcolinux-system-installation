@@ -2,3 +2,4 @@
 setxkbmap be
 sudo pacman -Syyu
 sudo pacman -S sublime-text-dev --noconfirm
+sudo pacman -S the_platinum_searcher-bin --noconfirm
