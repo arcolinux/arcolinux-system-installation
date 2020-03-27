@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+setxkbmap be
+sudo pacman -Syyu
+sudo pacman -S sublime-text-dev --noconfirm
