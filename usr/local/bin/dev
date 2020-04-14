@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 setxkbmap be
 sudo pacman -Syy
-sudo pacman -S sublime-text-dev --noconfirm
-sudo pacman -S the_platinum_searcher-bin --noconfirm
+sudo pacman -S sublime-text-dev --noconfirm --needed
+sudo pacman -S the_platinum_searcher-bin --noconfirm -needed
