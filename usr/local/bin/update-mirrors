@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+/usr/bin/reflector -f 100 -l 100 --number 50 --save /etc/pacman.d/mirrorlist
