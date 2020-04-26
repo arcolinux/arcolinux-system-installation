@@ -3,5 +3,3 @@ setxkbmap be
 sudo pacman -Syy
 sudo pacman -S sublime-text-dev --noconfirm --needed
 sudo pacman -S the_platinum_searcher-bin --noconfirm --needed
-sudo pacman -S arcolinux-local-xfce4-git
-cp -rf /etc/skel/* /home/liveuser/
