@@ -3,5 +3,5 @@ Type=Application
 Name=Install ArcoLinux
 Comment=Installer for ArcoLinux
 Categories=GTK;Settings;Security;X-GNOME-Settings-Panel;X-GNOME-SystemSettings;X-Unity-Settings-Panel;X-XFCE-SettingsDialog;X-XFCE-SystemSettings;Utility;System
-Exec=pkexec calamares
+Exec=pkexec calamares -style breeze
 Icon=arco-calamares
