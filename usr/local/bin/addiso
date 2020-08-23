@@ -4,4 +4,4 @@ echo '
 SigLevel = Required DatabaseOptional
 Include = /etc/pacman.d/arcolinux-mirrorlist
 ' | sudo tee --append /etc/pacman.conf
-sudo pacman -Syy
+sudo pacman -Syyu
