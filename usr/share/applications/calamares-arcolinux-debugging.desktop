@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Install ArcoLinux Debug
-Comment=Installer for ArcoLinux to debug
-Categories=GTK;Settings;Security;X-GNOME-Settings-Panel;X-GNOME-SystemSettings;X-Unity-Settings-Panel;X-XFCE-SettingsDialog;X-XFCE-SystemSettings;Utility;System
-Exec=env pkexec calamares -d -style breeze
-Icon=arco-calamares
