@@ -21,7 +21,7 @@ echo "Cleanup autologin root"
 echo "#################################"
 rm -rf /etc/systemd/system/getty@tty1.service.d
 echo
-echo "#################################"
+#echo "#################################"
 #echo "Fix for pamac icons not showing"
 #echo "#################################"
 #zcat /usr/share/app-info/xmls/community.xml.gz | sed 's|<em>||g;s|<\/em>||g;' | gzip > "new.xml.gz"
