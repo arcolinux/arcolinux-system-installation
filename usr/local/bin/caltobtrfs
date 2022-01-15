@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-FIND='defaultFileSystemType:  "ext4"'
-REPLACE='defaultFileSystemType:  "btrfs"'
-sudo sed -i "s/$FIND/$REPLACE/g" /etc/calamares/modules/partition.conf
