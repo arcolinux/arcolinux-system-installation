@@ -19,6 +19,16 @@ case $desktop in
   pacman -S sddm --noconfirm --needed
   systemctl enable sddm.service -f
     ;;
+  budgie-desktop.desktop)
+  echo "Gdm is installed and active - go back to sddm"
+  pacman -S sddm --noconfirm --needed
+  systemctl enable sddm.service -f
+    ;;
+  gnome-xorg.desktop)
+  echo "Gdm is installed and active - go back to sddm"
+  pacman -S sddm --noconfirm --needed
+  systemctl enable sddm.service -f
+    ;;
   *)
     echo "Nothing to do"
     ;;

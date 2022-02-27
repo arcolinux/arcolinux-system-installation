@@ -27,9 +27,9 @@ echo "#################################"
 echo "Extra for ArcoLinuxD"
 echo "#################################"
 echo
-echo "#################################"
-echo "Removing /etc/sddm.conf"
-echo "#################################"
+#echo "#################################"
+#echo "Removing /etc/sddm.conf"
+#echo "#################################"
 rm -f /etc/sddm.conf
 # DO NOT REMOVE - CALAMARES Reference
 #rm -rf /etc/sddm.conf.d
