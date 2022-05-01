@@ -39,6 +39,7 @@ if [ $result = "oracle" ];
 		fi
 
 		if pacman -Qi open-vm-tools &> /dev/null; then
+			systemctl disable vmware-vmblock-fuse.service
 			systemctl disable vmtoolsd.service
 			echo "Disabled vmtoolsd.service"
 			pacman -Rns open-vm-tools --noconfirm
@@ -72,6 +73,7 @@ if [ $result = "kvm" ];
 		fi
 
 		if pacman -Qi open-vm-tools &> /dev/null; then
+			systemctl disable vmware-vmblock-fuse.service
 			systemctl disable vmtoolsd.service
 			echo "Disabled vmtoolsd.service"
 			pacman -Rns open-vm-tools --noconfirm
@@ -145,6 +147,7 @@ if [ $result = "none" ];
 		fi
 
 		if pacman -Qi open-vm-tools &> /dev/null; then
+			systemctl disable vmware-vmblock-fuse.service
 			systemctl disable vmtoolsd.service
 			echo "Disabled vmtoolsd.service"
 			pacman -Rns open-vm-tools --noconfirm
