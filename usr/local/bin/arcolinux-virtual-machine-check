@@ -170,4 +170,14 @@ if [ $result = "none" ];
 			pacman -Rns qemu-guest-agent --noconfirm
 			echo "Removed qemu-guest-agent"
 		fi
+
+		if [ -f /usr/local/bin/arcolinux-virtual-machine-check ]; then
+	   		rm /usr/local/bin/arcolinux-virtual-machine-check
+			echo "Removed avm-check script"
+		fi
+
+		if [ -f /etc/systemd/system/multi-user.target.wants/virtual-machine-check.service ]; then
+			rm /etc/systemd/system/multi-user.target.wants/virtual-machine-check.service
+			echo "Removed avm-check script"
+		fi
 fi
