@@ -11,10 +11,6 @@ chmod 750 /etc/sudoers.d
 chmod 750 /etc/polkit-1/rules.d
 chgrp polkitd /etc/polkit-1/rules.d
 echo
-echo "#################################"
-echo "Permission of root"
-echo "#################################"
-chmod -v 700 /root
 echo
 echo "#################################"
 echo "Copy /etc/skel to /root"
@@ -58,6 +54,11 @@ mv /etc/arcolinux-release /etc/lsb-release
 #echo "Hardcode-fixer" 
 #echo "#################################"
 #hardcode-fixer
+
+echo "#################################"
+echo "Permission of root"
+echo "#################################"
+chmod -vR 700 /root
 
 echo "#################################"
 echo "ArcoLinux virtual machine check"
