@@ -12,6 +12,11 @@ chmod 750 /etc/polkit-1/rules.d
 chgrp polkitd /etc/polkit-1/rules.d
 echo
 echo "#################################"
+echo "Permission of root"
+echo "#################################"
+chmod -v 700 /root
+echo
+echo "#################################"
 echo "Copy /etc/skel to /root"
 echo "#################################"
 cp -aT /etc/skel/ /root/
@@ -48,11 +53,6 @@ rm -f /etc/polkit-1/rules.d/49-nopasswd_global.rules
 #rm -r /etc/systemd/system/etc-pacman.d-gnupg.mount
 rm /root/{.automated_script.sh,.zlogin}
 mv /etc/arcolinux-release /etc/lsb-release
-echo
-echo "#################################"
-echo "Permission of root"
-echo "#################################"
-chmod -v 750 /root
 
 # Do not do here - extra /home/root folder
 #echo "Hardcode-fixer" 
