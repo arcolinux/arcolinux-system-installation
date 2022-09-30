@@ -58,7 +58,7 @@ mv /etc/arcolinux-release /etc/lsb-release
 echo "#################################"
 echo "Permission of root"
 echo "#################################"
-chmod -vR 700 /root
+chmod -v 700 /root
 
 echo "#################################"
 echo "ArcoLinux virtual machine check"
