@@ -61,6 +61,11 @@ echo "#################################"
 chmod -v 700 /root
 
 echo "#################################"
+echo "Ubuntu keyserver"
+echo "#################################"
+echo  "keyserver hkp://keyserver.ubuntu.com:80" >> /etc/pacman.d/gnupg/gpg.conf
+
+echo "#################################"
 echo "ArcoLinux virtual machine check"
 echo "#################################"
 /usr/local/bin/arcolinux-virtual-machine-check
