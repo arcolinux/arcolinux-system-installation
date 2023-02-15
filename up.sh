@@ -30,12 +30,17 @@
 # reset - commit your changes or stash them before you merge
 # git reset --hard - personal alias - grh
 
+workdir=$(pwd)
+
 # checking if I have the latest files from github
 echo "Checking for newer files online first"
 git pull
 
 # Below command will backup everything inside the project folder
 git add --all .
+
+#echo "getting latest /etc/pacman.d/gnupg/gpg.conf"
+#wget https://raw.githubusercontent.com/arcolinux/arcolinux-system-config/master/etc/pacman.d/gnupg/gpg.conf -O $workdir//usr/local/share/arcolinux/installation/gpg.conf
 
 # Give a comment to the commit if you want
 echo "####################################"
