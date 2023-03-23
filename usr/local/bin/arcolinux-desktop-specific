@@ -1,13 +1,13 @@
 #!/bin/bash
 
-echo "#################################"
-echo "Begin arcolinux-desktop-specific"
-echo "#################################"
+echo "######################################################"
+echo "Begin arcolinux-desktop-specific X11"
+echo "######################################################"
 
 desktop=$(ls /usr/share/xsessions)
-echo "#################################"
+echo "######################################################"
 echo "This is your current desktop file "$desktop
-echo "#################################"
+echo "######################################################"
 case $desktop in
   leftwm.desktop)
   echo "Changing arcologout theme"
@@ -35,6 +35,20 @@ case $desktop in
     ;;
 esac
 
-echo "#################################"
+echo "######################################################"
+echo "Begin arcolinux-desktop-specific WAYLAND"
+echo "######################################################"
+
+desktop=$(ls /usr/share/wayland-xsessions)
+echo "######################################################"
+echo "This is your current desktop file "$desktop
+echo "######################################################"
+
+if pacman -Qi nvidia-dkms &> /dev/null; then
+  if grep -q "ArcoLinuxB-hyprland" /etc/dev-rel; then
+    sh /usr/local/bin/add-wayland-nvidia-settings
+  fi
+fi
+echo "######################################################"
 echo "End arcolinux-desktop-specific"
-echo "#################################"
+echo "######################################################"
