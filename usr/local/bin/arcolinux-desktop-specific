@@ -48,6 +48,9 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
   if grep -q "ArcoLinuxB-hyprland" /etc/dev-rel; then
     sh /usr/local/bin/add-wayland-nvidia-settings
   fi
+  if grep -q "ArcoLinuxB-sway" /etc/dev-rel; then
+    sh /usr/local/bin/add-wayland-nvidia-settings
+  fi
 fi
 echo "######################################################"
 echo "End arcolinux-desktop-specific"
