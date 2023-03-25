@@ -39,19 +39,25 @@ echo "######################################################"
 echo "Begin arcolinux-desktop-specific WAYLAND"
 echo "######################################################"
 
-desktop=$(ls /usr/share/wayland-xsessions)
+desktop=$(ls /usr/share/wayland-sessions)
 echo "######################################################"
 echo "This is your current desktop file "$desktop
 echo "######################################################"
 
-if pacman -Qi nvidia-dkms &> /dev/null; then
-  if grep -q "ArcoLinuxB-hyprland" /etc/dev-rel; then
-    sh /usr/local/bin/add-wayland-nvidia-settings
-  fi
-  if grep -q "ArcoLinuxB-sway" /etc/dev-rel; then
+if grep -q "ArcoLinuxB-hyprland" /etc/dev-rel; then
+  if pacman -Qi nvidia-dkms &> /dev/null; then
     sh /usr/local/bin/add-wayland-nvidia-settings
   fi
 fi
+
+if grep -q "ArcoLinuxB-sway" /etc/dev-rel; then
+  if pacman -Qi nvidia-dkms &> /dev/null; then
+    sh /usr/local/bin/add-wayland-nvidia-settings
+  else
+    sed -i 's/Exec=sway --unsupported-gpu/Exec=sway/' /usr/share/wayland-sessions/sway.desktop
+  fi
+fi
+
 echo "######################################################"
 echo "End arcolinux-desktop-specific"
 echo "######################################################"
