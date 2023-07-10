@@ -78,6 +78,10 @@ FIND='MODULES=""'
 REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
 sudo sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
+FIND='MODULES=()'
+REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
+sudo sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
+
 echo
 tput setaf 2
 echo "################################################################"

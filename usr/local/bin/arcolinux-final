@@ -56,6 +56,13 @@ mv /etc/arcolinux-release /etc/lsb-release
 #hardcode-fixer
 
 echo "#################################"
+echo "mkinitcpio - sd-vconsole"
+echo "#################################"
+
+sed -i "s/keymap consolefont/sd-vconsole/g" /etc/mkinitcpio.conf
+mkinitcpio -P
+
+echo "#################################"
 echo "Permission of root"
 echo "#################################"
 chmod -v 700 /root
