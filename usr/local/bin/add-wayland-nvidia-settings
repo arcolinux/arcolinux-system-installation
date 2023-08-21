@@ -93,6 +93,21 @@ echo
 
 echo "options nvidia-drm modeset=1" | sudo tee  /etc/modprobe.d/nvidia-wayland.conf
 
+
+echo
+tput setaf 2
+echo "################################################################"
+echo "################### Adding option nvidia-drm.modeset=1"
+echo "################### to /etc/default/grub"
+echo "################################################################"
+tput sgr0
+echo
+
+
+FIND='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes"'
+REPLACE='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm modeset=1"'
+sudo sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
+
 echo
 tput setaf 2
 echo "################################################################"
