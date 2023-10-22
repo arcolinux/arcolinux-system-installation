@@ -36,7 +36,7 @@ installed_dir=$(dirname $(readlink -f $(basename `pwd`)))
 
 echo
 echo "################################################################"
-echo "################### Making sure nvidia-dkms is installed or else exit"
+echo "################### Making sure nvidia-dkms is installed or else do nothing"
 echo "################################################################"
 echo
 
@@ -47,73 +47,64 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
 	echo "#########  Checking ..."$package" is installed... we can continue"
 	echo "################################################################"
 
-else
+	echo
+	echo "################################################################"
+	echo "################### Adding nvidia modules for Wayland and Nvidia"
+	echo "################### MODULES= nvidia nvidia_modeset nvidia_uvm nvidia_drm"
+	echo "################### in /etc/mkinitcpio.conf"
+	echo "################### and rebuilding /boot files"
+	echo "################################################################"
+	echo
 
-	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-	echo "!!!!!!!!!  Nvidia-dkms has NOT been installed"
-	echo "!!!!!!!!!  Script can not continue"
-	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-	exit 1
+	FIND='MODULES=""'
+	REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
+	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
+	FIND='MODULES=()'
+	REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
+	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
+
+	echo
+	echo "################################################################"
+	echo "################### Adding option nvidia-drm.modeset=1"
+	echo "################### to the kernel"
+	echo "################################################################"
+	echo
+
+	echo "options nvidia-drm modeset=1" | tee  /etc/modprobe.d/nvidia-wayland.conf
+
+
+	echo
+	echo "################################################################"
+	echo "################### Adding option nvidia-drm.modeset=1"
+	echo "################### to /etc/default/grub"
+	echo "################################################################"
+	echo
+
+
+	FIND='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes"'
+	REPLACE='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1"'
+	sed -i 's/$FIND/$REPLACE/g' /etc/default/grub
+
+	FIND="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes'"
+	REPLACE="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1'"
+	sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
+
+	echo
+	echo "################################################################"
+	echo "################### Mkinitcpio and update-grub"
+	echo "################################################################"
+	echo
+
+	mkinitcpio -P
+
+	grub-mkconfig -o /boot/grub/grub.cfg
+
+	echo
+	tput setaf 6
+	echo "################################################################"
+	echo "################### Done"
+	echo "################################################################"
+	tput sgr0
+	echo
 fi
-
-echo
-echo "################################################################"
-echo "################### Adding nvidia modules for Wayland and Nvidia"
-echo "################### MODULES= nvidia nvidia_modeset nvidia_uvm nvidia_drm"
-echo "################### in /etc/mkinitcpio.conf"
-echo "################### and rebuilding /boot files"
-echo "################################################################"
-echo
-
-FIND='MODULES=""'
-REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
-sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
-
-FIND='MODULES=()'
-REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
-sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
-
-echo
-echo "################################################################"
-echo "################### Adding option nvidia-drm.modeset=1"
-echo "################### to the kernel"
-echo "################################################################"
-echo
-
-echo "options nvidia-drm modeset=1" | tee  /etc/modprobe.d/nvidia-wayland.conf
-
-
-echo
-echo "################################################################"
-echo "################### Adding option nvidia-drm.modeset=1"
-echo "################### to /etc/default/grub"
-echo "################################################################"
-echo
-
-
-FIND='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes"'
-REPLACE='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1"'
-sed -i 's/$FIND/$REPLACE/g' /etc/default/grub
-
-FIND="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes'"
-REPLACE="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1'"
-sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
-
-echo
-echo "################################################################"
-echo "################### Mkinitcpio and update-grub"
-echo "################################################################"
-echo
-
-mkinitcpio -P
-
-grub-mkconfig -o /boot/grub/grub.cfg
-
-echo
-tput setaf 6
-echo "################################################################"
-echo "################### Done"
-echo "################################################################"
-tput sgr0
-echo
