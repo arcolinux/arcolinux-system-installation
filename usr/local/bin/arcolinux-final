@@ -59,8 +59,8 @@ echo "#################################"
 echo "mkinitcpio - sd-vconsole"
 echo "#################################"
 
-sed -i "s/keymap consolefont/sd-vconsole/g" /etc/mkinitcpio.conf
-mkinitcpio -P
+#sed -i "s/keymap consolefont/sd-vconsole/g" /etc/mkinitcpio.conf
+#mkinitcpio -P
 
 echo "#################################"
 echo "Permission of root"
