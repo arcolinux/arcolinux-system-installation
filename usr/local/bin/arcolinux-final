@@ -15,12 +15,12 @@ echo
 echo "#################################"
 echo "Copy /etc/skel to /root"
 echo "#################################"
-cp -aT /etc/skel/ /root/
+cp -aTv /etc/skel/ /root/
 echo
 echo "#################################"
 echo "Cleanup autologin root"
 echo "#################################"
-rm -rf /etc/systemd/system/getty@tty1.service.d
+rm -rfv /etc/systemd/system/getty@tty1.service.d
 echo
 #echo "#################################"
 #echo "Fix for pamac icons not showing"
@@ -43,24 +43,27 @@ echo
 echo "#################################"
 echo "Cleanup original files"
 echo "#################################"
-rm -f /etc/sudoers.d/g_wheel
-rm -rf /usr/share/backgrounds/xfce
-rm -f /etc/polkit-1/rules.d/49-nopasswd_global.rules
-#rm -r /etc/systemd/system/etc-pacman.d-gnupg.mount
-rm /root/{.automated_script.sh,.zlogin}
-mv /etc/arcolinux-release /etc/lsb-release
+rm -fv /etc/sudoers.d/g_wheel
+rm -rfv /usr/share/backgrounds/xfce
+rm -fv /etc/polkit-1/rules.d/49-nopasswd_global.rules
+rm -v /root/{.automated_script.sh,.zlogin}
+mv -v /etc/arcolinux-release /etc/lsb-release
 
 # Do not do here - extra /home/root folder
 #echo "Hardcode-fixer" 
 #echo "#################################"
 #hardcode-fixer
 
+echo "Start cleanup grub for systemd"
 if [ -f /tmp/systemd-boot ]; then
 	echo "#################################"
 	echo "Removing any leftovers for grub boot"
 	echo "#################################"
+	echo "remove grub-customizer"
 	pacman -R --noconfirm grub-customizer
+	echo "remove grub"
 	pacman -R --noconfirm grub
+	echo "remove arcolinux-grub-theme-vimix-git"
 	pacman -R --noconfirm arcolinux-grub-theme-vimix-git
 	rm -rv /etc/grub.d
 	rm -v /etc/default/grub
@@ -70,11 +73,11 @@ if [ -f /tmp/systemd-boot ]; then
 	echo "installing kernel-install-mkinitcpio"
 	pacman -U --noconfirm /usr/local/bin/kernel-install-mkinitcpio-*-any.pkg.tar.zst
 fi
+echo "End cleanup grub for systemd"
 
-echo "#################################"
-echo "mkinitcpio - sd-vconsole"
-echo "#################################"
-
+#echo "#################################"
+#echo "mkinitcpio - sd-vconsole"
+#echo "#################################"
 #sed -i "s/keymap consolefont/sd-vconsole/g" /etc/mkinitcpio.conf
 #mkinitcpio -P
 
@@ -86,6 +89,7 @@ chmod -v 700 /root
 echo "#################################"
 echo "ArcoLinux virtual machine check"
 echo "#################################"
+
 /usr/local/bin/arcolinux-virtual-machine-check
 
 echo
