@@ -22,12 +22,6 @@ echo "Cleanup autologin root"
 echo "#################################"
 rm -rfv /etc/systemd/system/getty@tty1.service.d
 echo
-#echo "#################################"
-#echo "Fix for pamac icons not showing"
-#echo "#################################"
-#zcat /usr/share/app-info/xmls/community.xml.gz | sed 's|<em>||g;s|<\/em>||g;' | gzip > "new.xml.gz"
-#mv new.xml.gz /usr/share/app-info/xmls/community.xml.gz
-#appstreamcli refresh-cache --force
 echo
 echo "#################################"
 echo "Setting editor to nano"
@@ -54,32 +48,11 @@ mv -v /etc/arcolinux-release /etc/lsb-release
 #echo "#################################"
 #hardcode-fixer
 
-echo "Start cleanup grub for systemd"
-if [ -f /tmp/systemd-boot ]; then
-	echo "#################################"
-	echo "Removing any leftovers for grub boot"
-	echo "#################################"
-	echo "remove grub-customizer"
-	pacman -R --noconfirm grub-customizer
-	echo "remove grub"
-	pacman -R --noconfirm grub
-	echo "remove arcolinux-grub-theme-vimix-git"
-	pacman -R --noconfirm arcolinux-grub-theme-vimix-git
-	rm -rv /etc/grub.d
-	rm -v /etc/default/grub
-	rm -v /etc/default/grub.pacsave
-	rm -rv /boot/grub
-	rm -v /etc/pacman.d/hooks/kernel-linux.hook
-	echo "installing kernel-install-mkinitcpio"
-	pacman -U --noconfirm /usr/local/bin/kernel-install-mkinitcpio-*-any.pkg.tar.zst
-fi
-echo "End cleanup grub for systemd"
+echo "Start systemd-boot"
+/usr/local/bin/arcolinux-systemd-dummy
+echo "Stop systemd-boot"
 
-#echo "#################################"
-#echo "mkinitcpio - sd-vconsole"
-#echo "#################################"
-#sed -i "s/keymap consolefont/sd-vconsole/g" /etc/mkinitcpio.conf
-#mkinitcpio -P
+echo "End cleanup grub for systemd"
 
 echo "#################################"
 echo "Permission of root"

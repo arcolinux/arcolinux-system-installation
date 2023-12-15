@@ -1,0 +1,30 @@
+#!/bin/bash
+
+echo
+echo "#################################"
+echo "Start arcolinux-systemd-boot"
+echo "#################################"
+echo
+
+# echo "#################################"
+# echo "Removing any leftovers for grub boot"
+# echo "#################################"
+# echo "remove grub-customizer"
+# pacman -R --noconfirm grub-customizer
+# echo "remove grub"
+# pacman -R --noconfirm grub
+# echo "remove arcolinux-grub-theme-vimix-git"
+# pacman -R --noconfirm arcolinux-grub-theme-vimix-git
+# rm -rv /etc/grub.d
+# rm -v /etc/default/grub
+# rm -v /etc/default/grub.pacsave
+# rm -rv /boot/grub
+#rm -v /etc/pacman.d/hooks/kernel-linux.hook
+echo "installing kernel-install-mkinitcpio"
+pacman -U --noconfirm /usr/local/bin/kernel-install-mkinitcpio-*-any.pkg.tar.zst
+
+echo
+echo "#################################"
+echo "End arcolinux-systemd-boot"
+echo "#################################"
+echo
