@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo
+echo "#################################"
+echo "Start arcolinux-systemd-boot"
+echo "#################################"
+echo
+
+echo
+echo "#################################"
+echo "End arcolinux-systemd-boot"
+echo "#################################"
+echo

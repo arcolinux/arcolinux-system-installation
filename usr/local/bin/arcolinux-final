@@ -52,8 +52,6 @@ echo "Start systemd-boot"
 /usr/local/bin/arcolinux-systemd-dummy
 echo "Stop systemd-boot"
 
-echo "End cleanup grub for systemd"
-
 echo "#################################"
 echo "Permission of root"
 echo "#################################"
