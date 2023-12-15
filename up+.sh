@@ -36,6 +36,9 @@ workdir=$(pwd)
 echo "Checking for newer files online first"
 git pull
 
+echo "getting kernel-install-mkinitcpio"
+cp -v /home/erik/ARCO/ARCOLINUX-REPO/arcolinux_repo_3party/x86_64/kernel-install-mkinitcpio*pkg.tar.zst $workdir/usr/local/bin
+
 # Below command will backup everything inside the project folder
 git add --all .
 

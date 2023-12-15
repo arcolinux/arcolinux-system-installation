@@ -55,6 +55,22 @@ mv /etc/arcolinux-release /etc/lsb-release
 #echo "#################################"
 #hardcode-fixer
 
+if [ -f /tmp/systemd-boot ]; then
+	echo "#################################"
+	echo "Removing any leftovers for grub boot"
+	echo "#################################"
+	pacman -R --noconfirm grub-customizer
+	pacman -R --noconfirm grub
+	pacman -R --noconfirm arcolinux-grub-theme-vimix-git
+	rm -rv /etc/grub.d
+	rm -v /etc/default/grub
+	rm -v /etc/default/grub.pacsave
+	rm -rv /boot/grub
+	rm -v /etc/pacman.d/hooks/kernel-linux.hook
+	echo "installing kernel-install-mkinitcpio"
+	pacman -U --noconfirm /usr/local/bin/kernel-install-mkinitcpio-*-any.pkg.tar.zst
+fi
+
 echo "#################################"
 echo "mkinitcpio - sd-vconsole"
 echo "#################################"
