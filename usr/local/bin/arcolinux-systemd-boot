@@ -6,6 +6,9 @@ echo "Start arcolinux-systemd-boot"
 echo "#################################"
 echo
 
+echo "installing kernel-install-mkinitcpio"
+pacman -U --noconfirm /usr/local/bin/kernel-install-mkinitcpio-*-any.pkg.tar.zst
+
 # echo "#################################"
 # echo "Removing any leftovers for grub boot"
 # echo "#################################"
@@ -20,8 +23,6 @@ echo
 # rm -v /etc/default/grub.pacsave
 # rm -rv /boot/grub
 #rm -v /etc/pacman.d/hooks/kernel-linux.hook
-echo "installing kernel-install-mkinitcpio"
-pacman -U --noconfirm /usr/local/bin/kernel-install-mkinitcpio-*-any.pkg.tar.zst
 
 echo
 echo "#################################"

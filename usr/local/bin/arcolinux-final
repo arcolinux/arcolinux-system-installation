@@ -15,7 +15,7 @@ echo
 echo "#################################"
 echo "Copy /etc/skel to /root"
 echo "#################################"
-cp -aTv /etc/skel/ /root/
+cp -aT /etc/skel/ /root/
 echo
 echo "#################################"
 echo "Cleanup autologin root"

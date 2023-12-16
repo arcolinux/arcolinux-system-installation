@@ -2,10 +2,10 @@
 
 echo
 echo "#################################"
-echo "Start arcolinux-systemd-dummy"
+echo "Start arcolinux-systemd-empty"
 echo "#################################"
 echo
-
+echo "You are running the empty"
 echo
 echo "#################################"
 echo "End arcolinux-systemd-dummy"
