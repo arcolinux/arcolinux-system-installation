@@ -84,11 +84,11 @@ if grep -q "ArcoLinuxD" /etc/dev-rel; then
 fi
 
 
-# if grep -q "ArcoLinuxB-plasma" /etc/dev-rel; then
-#   if pacman -Qi nvidia-dkms &> /dev/null; then
-#     sh /usr/local/bin/add-wayland-nvidia-settings
-#   fi
-# fi
+if grep -q "ArcoLinuxB-plasma" /etc/dev-rel; then
+ if pacman -Qi nvidia-dkms &> /dev/null; then
+   sh /usr/local/bin/add-wayland-nvidia-settings
+ fi
+fi
 
 echo "######################################################"
 echo "End arcolinux-desktop-specific"
