@@ -45,24 +45,10 @@ echo "#################################"
 if [[ $selection == "free" ]]; then
 	echo
 	echo "#################################"
-	echo "We remove nvidia-dkms and keep nouveau"
+	echo "Calamares file for no Nvidia"
 	echo "#################################"
 	echo
-	pacman -Rns --noconfirm nvidia-dkms nvidia-utils nvidia-settings egl-wayland
-	cp /etc/calamares/settings-advanced-no-nivida.conf /etc/calamares/settings-advanced.conf
-fi
-
-##############################################################################################
-
-#freenonouveau = remove nvidia-dkms and nouveau
-if [[ $selection == "freenonouveau" ]]; then
-	echo
-	echo "#################################"
-	echo "We remove nvidia-dkms and nouveau"
-	echo "#################################"
-	echo
-	pacman -Rns --noconfirm nvidia-dkms nvidia-utils nvidia-settings egl-wayland
-	pacman -Rns --noconfirm xf86-video-nouveau
+	#pacman -Rns --noconfirm nvidia-dkms nvidia-utils nvidia-settings egl-wayland
 	cp /etc/calamares/settings-advanced-no-nivida.conf /etc/calamares/settings-advanced.conf
 fi
 
@@ -72,21 +58,9 @@ fi
 if [[ $selection == "nonfree" ]]; then
 	echo
 	echo "#################################"
-	echo "We keep nvidia-dkms and nouveau"
+	echo "We keep nvidia-dkms"
 	echo "#################################"
 	echo
-fi
-
-##############################################################################################
-
-# nonfreenonouveau : keep nvidia-dkms and remove nouveau
-if [[ $selection == "nonfreenonouveau" ]]; then
-	echo
-	echo "#################################"
-	echo "We keep nvidia-dkms and remove nouveau"
-	echo "#################################"
-	echo
-	pacman -Rns --noconfirm xf86-video-nouveau
 fi
 
 ##############################################################################################

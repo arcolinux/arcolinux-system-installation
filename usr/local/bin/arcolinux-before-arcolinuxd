@@ -21,7 +21,7 @@ echo
 echo "#################################"
 echo "Changing into our own linux.preset"
 echo "#################################"
-mv /etc/mkinitcpio.d/arcolinux /etc/mkinitcpio.d/linux.preset
+mv -v /etc/mkinitcpio.d/arcolinux /etc/mkinitcpio.d/linux.preset
 
 echo "#################################"
 echo "Extra for ArcoLinuxD"

@@ -36,8 +36,68 @@ workdir=$(pwd)
 echo "Checking for newer files online first"
 git pull
 
-echo "getting kernel-install-mkinitcpio"
-cp -v /home/erik/ARCO/ARCOLINUX-REPO/arcolinux_repo_3party/x86_64/kernel-install-mkinitcpio*pkg.tar.zst $workdir/usr/local/bin
+# echo
+# echo "getting kernel-install-mkinitcpio"
+# echo
+# echo "Removed"
+# echo
+# rm -v $workdir/usr/local/bin/kernel-install-mkinitcpio*pkg.tar.zst
+# echo
+# echo "Copied"
+# echo
+# cp -v /home/erik/ARCO/ARCOLINUX-REPO/arcolinux_repo_3party/x86_64/kernel-install-mkinitcpio*pkg.tar.zst $workdir/usr/local/bin
+# echo
+
+
+echo "getting arcolinux-refind-theme-arco"
+echo
+echo "Removed"
+echo
+rm -v $workdir/usr/local/bin/arcolinux-refind-theme-arco*pkg.tar.zst
+echo
+echo "Copied"
+echo
+cp -v /home/erik/ARCO/ARCOLINUX-REPO/arcolinux_repo/x86_64/arcolinux-refind-theme-arco*pkg.tar.zst $workdir/usr/local/bin
+echo
+
+
+echo
+echo "getting arcolinux-bootloader-refind"
+echo
+echo "Removed"
+echo
+rm -v $workdir/usr/local/bin/arcolinux-bootloader-refind*pkg.tar.zst
+echo
+echo "Copied"
+echo
+cp -v /home/erik/ARCO/ARCOLINUX-REPO/arcolinux_repo/x86_64/arcolinux-bootloader-refind*pkg.tar.zst $workdir/usr/local/bin
+echo
+
+
+echo
+echo "getting arcolinux-bootloader-systemd-boot"
+echo
+echo "Removed"
+echo
+rm -v $workdir/usr/local/bin/arcolinux-bootloader-systemd-boot*pkg.tar.zst
+echo
+echo "Copied"
+echo
+cp -v /home/erik/ARCO/ARCOLINUX-REPO/arcolinux_repo/x86_64/arcolinux-bootloader-systemd-boot*pkg.tar.zst $workdir/usr/local/bin
+echo
+
+
+echo
+echo "getting pacman-hook-kernel-install"
+echo
+echo "Removed"
+echo
+rm -v $workdir/usr/local/bin/pacman-hook-kernel-install*pkg.tar.zst
+echo
+echo "Copied"
+echo
+cp -v /home/erik/ARCO/ARCOLINUX-REPO/arcolinux_repo_3party/x86_64/pacman-hook-kernel-install*pkg.tar.zst $workdir/usr/local/bin
+echo
 
 # Below command will backup everything inside the project folder
 git add --all .
