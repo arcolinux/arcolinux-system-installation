@@ -48,32 +48,36 @@ mv -v /etc/arcolinux-release /etc/lsb-release
 
 echo "installing refind packages"
 if [ -f /boot/efi/EFI/refind/refind.conf ]; then
+
+	echo "removing grub"
+	pacman -R --noconfirm arcolinux-grub-theme-vimix-git
+	pacman -R --noconfirm arcolinux-bootloader-grub-git
+	pacman -R --noconfirm grub
+	rm -r /boot/grub
+	rm /etc/default/grub
+
 	echo "installing refind packages"
 	pacman -U --noconfirm /usr/local/bin/arcolinux-refind-theme-arco*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/arcolinux-bootloader-refind-git*pkg.tar.zst
 
-	pacman -R --noconfirm grub
-	pacman -R --noconfirm arcolinux-grub-theme-vimix-git
-	pacman -R --noconfirm arcolinux-bootloader-grub-git
-	
-	rm -r /boot/grub
-	rm /etc/default/grub
 fi
 echo "End installing refind packages"
 
 echo "installing systemd-boot packages"
 if [ -f /boot/efi/loader/loader.conf ]; then
+	
+	echo "removing grub"
+	pacman -R --noconfirm arcolinux-grub-theme-vimix-git
+	pacman -R --noconfirm arcolinux-bootloader-grub-git
+	pacman -R --noconfirm grub
+	rm -r /boot/grub
+	rm /etc/default/grub
+
 	echo "installing systemd-boot packages"
 	#pacman -U --noconfirm /usr/local/bin/kernel-install-mkinitcpio*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/pacman-hook-kernel-install*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/arcolinux-bootloader-systemd-boot-git*pkg.tar.zst
 
-	pacman -R --noconfirm grub
-	pacman -R --noconfirm arcolinux-grub-theme-vimix-git
-	pacman -R --noconfirm arcolinux-bootloader-grub-git
-
-	rm -r /boot/grub
-	rm /etc/default/grub
 fi
 echo "End installation systemd-boot packages"
 
