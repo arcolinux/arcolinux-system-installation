@@ -74,7 +74,6 @@ if [ -f /boot/efi/loader/loader.conf ]; then
 	rm /etc/default/grub
 
 	echo "installing systemd-boot packages"
-	#pacman -U --noconfirm /usr/local/bin/kernel-install-mkinitcpio*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/pacman-hook-kernel-install*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/arcolinux-bootloader-systemd-boot-git*pkg.tar.zst
 
@@ -85,12 +84,6 @@ echo "#################################"
 echo "Permission of root set to 700"
 echo "#################################"
 chmod -v 700 /root
-
-echo "#################################"
-echo "ArcoLinux virtual machine check"
-echo "#################################"
-
-/usr/local/bin/arcolinux-virtual-machine-check
 
 echo
 echo "#################################"

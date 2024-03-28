@@ -1,5 +1,5 @@
 #!/bin/bash
-# driver=free or driver=nonfree - grub and efi
+# driver=free or driver=nonfree
 
 kernel_cmdline(){
 	for param in $(cat /proc/cmdline); do
@@ -32,7 +32,7 @@ selection=$(get_driver)
 
 echo
 echo "#################################"
-echo "Start arcolinux-graphical-target"
+echo "Start arcolinux-remove-nvidia"
 echo "#################################"
 echo
 echo "#################################"
@@ -41,34 +41,34 @@ echo "#################################"
 
 ##############################################################################################
 
-# free = remove nvidia-dkms keep nouveau
 if [[ $selection == "free" ]]; then
 	echo
 	echo "#################################"
-	echo "Calamares file for no Nvidia"
+	echo "Removing all nvidia related packages"
 	echo "#################################"
 	echo
-	cp /etc/calamares/settings-advanced-no-nivida.conf /etc/calamares/settings-advanced.conf
+	pacman -Rns --noconfirm nvidia-dkms nvidia-utils nvidia-settings egl-wayland
 fi
+
 
 ##############################################################################################
 
 # chadwm needs to be rebuild before launching
 
-if grep -Fxq "ISO_CODENAME=ArcoLinuxB-chadwm" /etc/dev-rel
-then
-    # code if found
-    echo 'We are on Chadwm - compiling'
-    cd /etc/skel/.config/arco-chadwm/chadwm
-    make -B
-    make install
-else
-    # code if not found
-    echo "nothing to do"
-fi
+# if grep -Fxq "ISO_CODENAME=ArcoLinuxB-chadwm" /etc/dev-rel
+# then
+#     # code if found
+#     echo 'We are on Chadwm - compiling'
+#     cd /etc/skel/.config/arco-chadwm/chadwm
+#     make -B
+#     make install
+# else
+#     # code if not found
+#     echo "nothing to do"
+# fi
 
 echo
 echo "#################################"
-echo "End arcolinux-graphical-target"
+echo "End arcolinux-remove-nvidia"
 echo "#################################"
 echo

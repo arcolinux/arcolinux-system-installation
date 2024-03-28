@@ -16,16 +16,6 @@
 #   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
 #
 ##################################################################################################################
-#tput setaf 0 = black
-#tput setaf 1 = red
-#tput setaf 2 = green
-#tput setaf 3 = yellow
-#tput setaf 4 = dark blue
-#tput setaf 5 = purple
-#tput setaf 6 = cyan
-#tput setaf 7 = gray
-#tput setaf 8 = light blue
-##################################################################################################################
 
 installed_dir=$(dirname $(readlink -f $(basename `pwd`)))
 
@@ -71,8 +61,7 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
 	echo "################################################################"
 	echo
 
-	echo "options nvidia-drm modeset=1" | tee  /etc/modprobe.d/nvidia-wayland.conf
-
+	echo "options nvidia-drm modeset=1" | tee  /etc/modprobe.d/arcolinux-nvidia.conf
 
 	echo
 	echo "################################################################"
@@ -81,14 +70,17 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
 	echo "################################################################"
 	echo
 
+	if [ -f /etc/default/grub ]; then
+		FIND='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes"'
+		REPLACE='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1"'
+		sed -i 's/$FIND/$REPLACE/g' /etc/default/grub
+	fi
 
-	FIND='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes"'
-	REPLACE='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1"'
-	sed -i 's/$FIND/$REPLACE/g' /etc/default/grub
-
-	FIND="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes'"
-	REPLACE="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1'"
-	sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
+	if [ -f /etc/default/grub ]; then
+		FIND="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes'"
+		REPLACE="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1'"
+		sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
+	fi
 
 	echo
 	echo "################################################################"
@@ -98,13 +90,14 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
 
 	mkinitcpio -P
 
-	grub-mkconfig -o /boot/grub/grub.cfg
+	if [ -f /etc/default/grub ]; then
+		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArcoLinux
+		grub-mkconfig -o /boot/grub/grub.cfg
+	fi
 
 	echo
-	tput setaf 6
 	echo "################################################################"
 	echo "################### Done"
 	echo "################################################################"
-	tput sgr0
 	echo
 fi

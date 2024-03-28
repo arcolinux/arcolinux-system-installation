@@ -15,6 +15,10 @@
 #
 ###############################################################################
 
+echo "#################################"
+echo "ArcoLinux virtual machine check start"
+echo "#################################"
+
 result=$(systemd-detect-virt)
 
 while [ -e "/var/lib/pacman/db.lck" ];
@@ -181,3 +185,7 @@ if [ $result = "none" ];
 			echo "Removed avm-check script"
 		fi
 fi
+
+echo "#################################"
+echo "ArcoLinux virtual machine check end"
+echo "#################################"

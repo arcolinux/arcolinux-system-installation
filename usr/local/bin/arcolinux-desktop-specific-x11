@@ -1,0 +1,40 @@
+#!/bin/bash
+
+echo "######################################################"
+echo "Begin arcolinux-desktop-specific X11 DESIGN"
+echo "######################################################"
+
+desktop=$(ls /usr/share/xsessions)
+echo "######################################################"
+echo "This is your current desktop file "$desktop
+echo "######################################################"
+case $desktop in
+  leftwm.desktop)
+  echo "Changing arcologout theme"
+  sed -i "s/theme=white/theme=beauty/g" /etc/archlinux-logout.conf
+  echo "Changing .bashrc"
+  sed -i "s/neofetch/#neofetch/g" /etc/skel/.bashrc
+  sed -i "s/#ufetch-arco/ufetch-arco | lolcat/g" /etc/skel/.bashrc
+    ;;
+  dusk.desktop)
+  echo "Changing arcologout theme"
+  sed -i "s/theme=white/theme=runes/g" /etc/archlinux-logout.conf
+  echo "Changing .bashrc"
+  sed -i "s/neofetch/#neofetch/g" /etc/skel/.bashrc
+  sed -i "s/#paleofetch/paleofetch | lolcat/g" /etc/skel/.bashrc
+    ;;
+  chadwm.desktop)
+  echo "Changing arcologout theme"
+  sed -i "s/theme=white/theme=runes/g" /etc/archlinux-logout.conf
+  echo "Changing .bashrc"
+  sed -i "s/neofetch/#neofetch/g" /etc/skel/.bashrc
+  sed -i "s/#paleofetch/paleofetch | lolcat/g" /etc/skel/.bashrc
+    ;;
+  *)
+    echo "Nothing to do"
+    ;;
+esac
+
+echo "######################################################"
+echo "End arcolinux-desktop-specific X11 DESIGN"
+echo "######################################################"
