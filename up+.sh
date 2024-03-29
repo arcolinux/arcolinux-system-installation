@@ -49,7 +49,7 @@ git pull
 # echo
 
 
-echo "getting arcolinux-refind-theme-arco"
+echo "getting arcolinux-refind-theme-arco-specs"
 echo
 echo "Removed"
 echo
@@ -57,7 +57,7 @@ rm -v $workdir/usr/local/bin/arcolinux-refind-theme-arco*pkg.tar.zst
 echo
 echo "Copied"
 echo
-cp -v /home/erik/ARCO/ARCOLINUX-REPO/arcolinux_repo/x86_64/arcolinux-refind-theme-arco*pkg.tar.zst $workdir/usr/local/bin
+cp -v /home/erik/ARCO/ARCOLINUX-REPO/arcolinux_repo/x86_64/arcolinux-refind-theme-arco-specs*pkg.tar.zst $workdir/usr/local/bin
 echo
 
 
