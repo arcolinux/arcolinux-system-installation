@@ -54,7 +54,7 @@ if [ -f /boot/efi/EFI/refind/refind.conf ]; then
 	pacman -R --noconfirm arcolinux-bootloader-grub-git
 	pacman -R --noconfirm grub
 	rm -r /boot/grub
-	rm /etc/default/grub
+	rm /etc/default/grub*
 
 	echo "installing refind packages"
 	pacman -U --noconfirm /usr/local/bin/arcolinux-refind-theme-arco*pkg.tar.zst
@@ -71,7 +71,7 @@ if [ -f /boot/efi/loader/loader.conf ]; then
 	pacman -R --noconfirm arcolinux-bootloader-grub-git
 	pacman -R --noconfirm grub
 	rm -r /boot/grub
-	rm /etc/default/grub
+	rm /etc/default/grub*
 
 	echo "installing systemd-boot packages"
 	pacman -U --noconfirm /usr/local/bin/pacman-hook-kernel-install*pkg.tar.zst

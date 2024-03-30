@@ -84,20 +84,14 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
 
 	echo
 	echo "################################################################"
-	echo "################### Mkinitcpio and update-grub"
-	echo "################################################################"
-	echo
-
-	mkinitcpio -P
-
-	if [ -f /etc/default/grub ]; then
-		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArcoLinux
-		grub-mkconfig -o /boot/grub/grub.cfg
-	fi
-
-	echo
-	echo "################################################################"
 	echo "################### Done"
 	echo "################################################################"
 	echo
+
+else 
+	echo
+	echo "################################################################"
+	echo "################### Nvidia-dkms is not present - nothing to do"
+	echo "################################################################"
+	echo	
 fi
