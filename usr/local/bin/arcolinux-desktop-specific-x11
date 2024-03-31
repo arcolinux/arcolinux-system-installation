@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "######################################################"
-echo "Begin arcolinux-desktop-specific X11 DESIGN"
+echo "Begin arcolinux-desktop-specific X11"
 echo "######################################################"
 
 desktop=$(ls /usr/share/xsessions)
@@ -36,5 +36,5 @@ case $desktop in
 esac
 
 echo "######################################################"
-echo "End arcolinux-desktop-specific X11 DESIGN"
+echo "End arcolinux-desktop-specific X11"
 echo "######################################################"

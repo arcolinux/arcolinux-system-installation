@@ -1,68 +1,50 @@
 #!/bin/bash
-# driver=free or driver=nonfree
-
-echo
-echo "################################################################"
-echo "################### Start arcolinux-nvidia-settings"
-echo "################################################################"
-echo
-
-kernel_cmdline(){
-	for param in $(cat /proc/cmdline); do
-		case "${param}" in
-			$1=*) echo "${param##*=}"; return 0 ;;
-			$1) return 0 ;;
-			*) continue ;;
-		esac
-	done
-	[ -n "${2}" ] && echo "${2}"
-	return 1
-}
-
-get_driver(){
-	echo $(kernel_cmdline driver)
-}
-
-while [ -e "/var/lib/pacman/db.lck" ];
-do
-    echo 'Pacman is not ready yet. Will try again in 10 seconds.'
-    seconds=$(($seconds + 5))
-    sleep 5
-    if [[ "$seconds" == "30" ]]; then
-        echo 'Warning: removing pacman db.lck!'
-        rm /var/lib/pacman/db.lck
-    fi
-done
-
-selection=$(get_driver)
 
 echo
 echo "#################################"
-echo "Selection was "$selection
+echo "Start arcolinux-nvidia-settings"
 echo "#################################"
 echo
 
-##############################################################################################
+echo
+echo "################################################################"
+echo "###### Making sure nvidia-dkms is installed or else do nothing"
+echo "################################################################"
+echo
 
-if [[ $selection == "nonfree" ]]; then
+# Just checking if nvidia-dkms is installed else stop
+if pacman -Qi nvidia-dkms &> /dev/null; then
+
+	echo "################################################################"
+	echo "#########  Checking ..."$package" is installed... we can continue"
+	echo "################################################################"
 
 	echo
 	echo "################################################################"
-	echo "################### Adding nvidia modules to mkinitcpio.conf"
+	echo "################### Adding nvidia modules for Wayland and Nvidia"
 	echo "################### MODULES= nvidia nvidia_modeset nvidia_uvm nvidia_drm"
+	echo "################### in /etc/mkinitcpio.conf"
+	echo "################### and rebuilding /boot files"
 	echo "################################################################"
 	echo
 
-	cp -v /etc/mkinitcpio-nvidia.conf /etc/mkinitcpio.conf
+	FIND='MODULES=""'
+	REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
+	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
-	#echo
-	#echo "################################################################"
-	#echo "################### Adding option nvidia-drm.modeset=1"
-	#echo "################### to the kernel"
-	#echo "################################################################"
-	#echo
+	FIND='MODULES=()'
+	REPLACE='MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
+	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
-	#echo "options nvidia-drm modeset=1" | tee  /etc/modprobe.d/arcolinux-nvidia.conf
+	# echo
+	# echo "################################################################"
+	# echo "################### Adding option nvidia-drm.modeset=1"
+	# echo "################### to the kernel"
+	# echo "################################################################"
+	# echo
+
+	# echo "options nvidia-drm modeset=1" | tee  /etc/modprobe.d/nvidia-wayland.conf
+
 
 	echo
 	echo "################################################################"
@@ -71,25 +53,41 @@ if [[ $selection == "nonfree" ]]; then
 	echo "################################################################"
 	echo
 
-	if [ -f /etc/default/grub ]; then
-		cp -v /etc/default/grub-nvidia /etc/default/grub
+	if [ -f /etc/default/grub ];then
+		FIND='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes"'
+		REPLACE='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1"'
+		sed -i 's/$FIND/$REPLACE/g' /etc/default/grub
 	fi
 
-else
+	if [ -f /etc/default/grub ];then
+		FIND="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes'"
+		REPLACE="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1'"
+		sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
+	fi
 
 	echo
 	echo "################################################################"
-	echo "################### Removing files"
+	echo "################### Mkinitcpio and update-grub"
 	echo "################################################################"
 	echo
 
-	rm -v /etc/default/grub-nvidia
-	rm -v /etc/mkinitcpio-nvidia.conf
+	mkinitcpio -P
 
+	if [ -f /etc/default/grub ];then
+		grub-mkconfig -o /boot/grub/grub.cfg
+	fi
+
+	echo
+	tput setaf 6
+	echo "################################################################"
+	echo "################### Done"
+	echo "################################################################"
+	tput sgr0
+	echo
 fi
 
 echo
-echo "################################################################"
-echo "################### End arcolinux-nvidia-settings"
-echo "################################################################"
+echo "#################################"
+echo "Start arcolinux-nvidia-settings"
+echo "#################################"
 echo

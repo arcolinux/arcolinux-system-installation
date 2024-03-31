@@ -14,7 +14,7 @@
 #   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
 #
 ###############################################################################
-echo
+
 echo
 echo "#################################"
 echo "Start arcolinux-displaymanager-check"
