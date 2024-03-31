@@ -1,67 +1,74 @@
 #!/bin/bash
-#set -e
-##################################################################################################################
-# Author    : Erik Dubois
-# Website   : https://www.erikdubois.be
-# Website   : https://www.alci.online
-# Website   : https://www.ariser.eu
-# Website   : https://www.arcolinux.info
-# Website   : https://www.arcolinux.com
-# Website   : https://www.arcolinuxd.com
-# Website   : https://www.arcolinuxb.com
-# Website   : https://www.arcolinuxiso.com
-# Website   : https://www.arcolinuxforum.com
-##################################################################################################################
-#
-#   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
-#
-##################################################################################################################
-
-installed_dir=$(dirname $(readlink -f $(basename `pwd`)))
-
-##################################################################################################################
-
-# https://wiki.hyprland.org/Nvidia/
-# https://community.kde.org/Plasma/Wayland/Nvidia
+# driver=free or driver=nonfree
 
 echo
 echo "################################################################"
-echo "################### Making sure nvidia-dkms is installed or else do nothing"
+echo "################### Start arcolinux-nvidia-settings"
 echo "################################################################"
 echo
 
-# Just checking if nvidia-dkms is installed else stop
-if pacman -Qi nvidia-dkms &> /dev/null; then
+kernel_cmdline(){
+	for param in $(cat /proc/cmdline); do
+		case "${param}" in
+			$1=*) echo "${param##*=}"; return 0 ;;
+			$1) return 0 ;;
+			*) continue ;;
+		esac
+	done
+	[ -n "${2}" ] && echo "${2}"
+	return 1
+}
 
-	echo "################################################################"
-	echo "#########  Checking ..."$package" is installed... we can continue"
-	echo "################################################################"
+get_driver(){
+	echo $(kernel_cmdline driver)
+}
+
+while [ -e "/var/lib/pacman/db.lck" ];
+do
+    echo 'Pacman is not ready yet. Will try again in 10 seconds.'
+    seconds=$(($seconds + 5))
+    sleep 5
+    if [[ "$seconds" == "30" ]]; then
+        echo 'Warning: removing pacman db.lck!'
+        rm /var/lib/pacman/db.lck
+    fi
+done
+
+selection=$(get_driver)
+
+echo
+echo "#################################"
+echo "Selection was "$selection
+echo "#################################"
+echo
+
+##############################################################################################
+
+if [[ $selection == "nonfree" ]]; then
 
 	echo
 	echo "################################################################"
-	echo "################### Adding nvidia modules for Wayland and Nvidia"
+	echo "################### Adding nvidia modules to mkinitcpio.conf"
 	echo "################### MODULES= nvidia nvidia_modeset nvidia_uvm nvidia_drm"
-	echo "################### in /etc/mkinitcpio.conf"
-	echo "################### and rebuilding /boot files"
 	echo "################################################################"
 	echo
 
 	FIND='MODULES=""'
 	REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
-	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
+	sudo sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
 	FIND='MODULES=()'
-	REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
-	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
+	REPLACE='MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
+	sudo sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
-	echo
-	echo "################################################################"
-	echo "################### Adding option nvidia-drm.modeset=1"
-	echo "################### to the kernel"
-	echo "################################################################"
-	echo
+	#echo
+	#echo "################################################################"
+	#echo "################### Adding option nvidia-drm.modeset=1"
+	#echo "################### to the kernel"
+	#echo "################################################################"
+	#echo
 
-	echo "options nvidia-drm modeset=1" | tee  /etc/modprobe.d/arcolinux-nvidia.conf
+	#echo "options nvidia-drm modeset=1" | tee  /etc/modprobe.d/arcolinux-nvidia.conf
 
 	echo
 	echo "################################################################"
@@ -82,16 +89,10 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
 		sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
 	fi
 
-	echo
-	echo "################################################################"
-	echo "################### Done"
-	echo "################################################################"
-	echo
-
-else 
-	echo
-	echo "################################################################"
-	echo "################### Nvidia-dkms is not present - nothing to do"
-	echo "################################################################"
-	echo	
 fi
+
+echo
+echo "################################################################"
+echo "################### End arcolinux-nvidia-settings"
+echo "################################################################"
+echo
