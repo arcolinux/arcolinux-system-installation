@@ -53,13 +53,7 @@ if [[ $selection == "nonfree" ]]; then
 	echo "################################################################"
 	echo
 
-	FIND='MODULES=""'
-	REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
-	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
-
-	FIND='MODULES=()'
-	REPLACE='MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
-	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
+	mv -v /etc/mkinitcpio-nvidia.conf /etc/mkinitcpio.conf
 
 	#echo
 	#echo "################################################################"
@@ -78,16 +72,19 @@ if [[ $selection == "nonfree" ]]; then
 	echo
 
 	if [ -f /etc/default/grub ]; then
-		FIND='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes"'
-		REPLACE='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1"'
-		sed -i 's/$FIND/$REPLACE/g' /etc/default/grub
+		mv -v /etc/default/grub-nvidia /etc/default/grub
 	fi
 
-	if [ -f /etc/default/grub ]; then
-		FIND="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes'"
-		REPLACE="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1'"
-		sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
-	fi
+else
+
+	echo
+	echo "################################################################"
+	echo "################### Removing files"
+	echo "################################################################"
+	echo
+
+	rm -v /etc/default/grub-nvidia
+	rm -v /etc/mkinitcpio-nvidia.conf
 
 fi
 
