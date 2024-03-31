@@ -5,6 +5,16 @@ echo "Start arcolinux-final"
 echo "#################################"
 echo
 echo "#################################"
+echo "Copying nvidia related files"
+echo "#################################"
+if [ -f /etc/mkinitcpio-nvidia.conf ]; then
+	cp -v /etc/mkinitcpio-nvidia.conf /etc/mkinitcpio.conf
+fi
+if [ -f /etc/default/grub-nvidia ]; then
+	cp -v /etc/default/grub-nvidia /etc/default/grub
+fi
+echo
+echo "#################################"
 echo "Permissions of important folders"
 echo "#################################"
 chmod 750 /etc/sudoers.d
