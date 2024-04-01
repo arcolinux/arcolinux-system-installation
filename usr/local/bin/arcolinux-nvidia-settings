@@ -55,6 +55,21 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
 		sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
 	fi
 
+	# SYSTEMD-BOOT
+	if [ -d /boot/efi/loader/entries/ ];then
+		ENTRY_DIR="/boot/efi/loader/entries/"
+		PARAM="nvidia-drm.modeset=1"
+
+		for entry in "$ENTRY_DIR"*.conf; do
+	  	if grep -q "nvidia-drm.modeset=1" "$entry"; then
+	    	echo "Parameter already present in $(basename "$entry")"
+	  	else
+	    	sed -i "/^options / s/options /&$PARAM /" "$entry"
+	    	echo "Added parameter to $(basename "$entry")"
+	  	fi
+		done
+	fi
+
 	echo
 	echo "################################################################"
 	echo "################### Mkinitcpio and update-grub"
@@ -64,6 +79,7 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
 	mkinitcpio -P
 
 	if [ -f /etc/default/grub ];then
+		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArcoLinux
 		grub-mkconfig -o /boot/grub/grub.cfg
 	fi
 
