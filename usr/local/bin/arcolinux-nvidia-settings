@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "grub" > tee /bootloader
+
 echo
 echo "#############################################################"
 echo "Start arcolinux-nvidia-settings only for wayland desktops"
@@ -68,6 +70,7 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 		    	echo "Added parameter to $(basename "$entry")"
 		  	fi
 			done
+			echo "systemd-boot" > tee /bootloader
 		fi
 
 		# REFIND
@@ -103,6 +106,8 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 			# Replace the original file with the modified one
 			mv "${CONF_FILE}.tmp" "$CONF_FILE"
 			echo "Parameter '$PARAM' has been added to $CONF_FILE."
+
+			echo "refind" > tee /bootloader
 		fi
 
 		echo
