@@ -1,102 +1,132 @@
 #!/bin/bash
 
 echo
-echo "#################################"
-echo "Start arcolinux-nvidia-settings"
-echo "#################################"
+echo "#############################################################"
+echo "Start arcolinux-nvidia-settings only for wayland desktops"
+echo "#############################################################"
 echo
+if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/wayland-sessions/sway.desktop ] || [ -f /usr/share/wayland-sessions/wayfire.desktop ]; then
 
-# Just checking if nvidia-dkms is installed else stop
-if pacman -Qi nvidia-dkms &> /dev/null; then
+	# Just checking if nvidia-dkms is installed else stop
+	if pacman -Qi nvidia-dkms &> /dev/null; then
 
-	echo
-	echo "################################################################"
-	echo "###### Making sure nvidia-dkms is installed or else do nothing"
-	echo "################################################################"
-	echo
+		echo
+		echo "################################################################"
+		echo "###### Making sure nvidia-dkms is installed or else do nothing"
+		echo "################################################################"
+		echo
 
-	echo "################################################################"
-	echo "#########  Checking ..."$package" is installed... we can continue"
-	echo "################################################################"
+		echo "################################################################"
+		echo "#########  Checking ..."$package" is installed... we can continue"
+		echo "################################################################"
 
-	echo
-	echo "################################################################"
-	echo "################### Adding nvidia modules for Wayland and Nvidia"
-	echo "################### MODULES= nvidia nvidia_modeset nvidia_uvm nvidia_drm"
-	echo "################### in /etc/mkinitcpio.conf"
-	echo "################### and rebuilding /boot files"
-	echo "################################################################"
-	echo
+		echo
+		echo "################################################################"
+		echo "################### Adding nvidia modules for Wayland and Nvidia"
+		echo "################### MODULES= nvidia nvidia_modeset nvidia_uvm nvidia_drm"
+		echo "################### in /etc/mkinitcpio.conf"
+		echo "################### and rebuilding /boot files"
+		echo "################################################################"
+		echo
 
-	FIND='MODULES=""'
-	REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
-	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
+		FIND='MODULES=""'
+		REPLACE='MODULES="nvidia nvidia_modeset nvidia_uvm nvidia_drm"'
+		sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
-	FIND='MODULES=()'
-	REPLACE='MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
-	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
+		FIND='MODULES=()'
+		REPLACE='MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
+		sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
-	echo
-	echo "################################################################"
-	echo "################### Adding option nvidia-drm.modeset=1"
-	echo "################### to /etc/default/grub"
-	echo "################################################################"
-	echo
+		echo
+		echo "################################################################"
+		echo "################### Adding option nvidia-drm.modeset=1"
+		echo "################### to /etc/default/grub"
+		echo "################################################################"
+		echo
 
-	if [ -f /etc/default/grub ];then
-		FIND='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes"'
-		REPLACE='GRUB_CMDLINE_LINUX_DEFAULT="quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1"'
-		sed -i 's/$FIND/$REPLACE/g' /etc/default/grub
+		if [ -f /etc/default/grub ];then
+			sudo sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/ s/\"$/ nvidia-drm.modeset=1\"/" /etc/default/grub
+		fi
+
+		echo
+		echo "################################################################"
+		echo "################### Adding option nvidia-drm.modeset=1"
+		echo "################### to SYSTEMD-BOOT entries"
+		echo "################################################################"
+		echo
+
+		# SYSTEMD-BOOT
+		if pacman -Qi arcolinux-bootloader-systemd-boot-git &> /dev/null; then
+			ENTRY_DIR="/boot/efi/loader/entries/"
+			PARAM="nvidia-drm.modeset=1"
+
+			for entry in "$ENTRY_DIR"*.conf; do
+		  	if grep -q "nvidia-drm.modeset=1" "$entry"; then
+		    	echo "Parameter already present in $(basename "$entry")"
+		  	else
+		    	sed -i "/^options / s/options /&$PARAM /" "$entry"
+		    	echo "Added parameter to $(basename "$entry")"
+		  	fi
+			done
+		fi
+
+		# REFIND
+		if [ -f /boot/refind_linux.conf ]; then
+
+			CONF_FILE="/boot/refind_linux.conf"
+			PARAM="nvidia-drm.modeset=1"
+
+			# Function to add the parameter to a line
+			add_param() {
+			    echo "$1" | sed "s/\"$/ $PARAM\"/"
+			}
+
+			# Check if the configuration file exists
+			if [ ! -f "$CONF_FILE" ]; then
+			    echo "Configuration file not found: $CONF_FILE"
+			fi
+
+			# Check if parameter is already set
+			if grep -q "$PARAM" "$CONF_FILE"; then
+			    echo "Parameter '$PARAM' is already present in $CONF_FILE."
+			fi
+
+			# Read the file and append the parameter
+			while IFS= read -r line; do
+			    # Append the parameter if the line ends with "
+			    if [[ "$line" =~ \"$ ]]; then
+			        line=$(add_param "$line")
+			    fi
+			    echo "$line"
+			done < "$CONF_FILE" > "${CONF_FILE}.tmp"
+
+			# Replace the original file with the modified one
+			mv "${CONF_FILE}.tmp" "$CONF_FILE"
+			echo "Parameter '$PARAM' has been added to $CONF_FILE."
+		fi
+
+		echo
+		echo "################################################################"
+		echo "################### Mkinitcpio and update-grub"
+		echo "################################################################"
+		echo
+
+		mkinitcpio -P
+
+		if [ -f /etc/default/grub ];then
+			grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArcoLinux
+			grub-mkconfig -o /boot/grub/grub.cfg
+		fi
+
+		echo
+		tput setaf 6
+		echo "################################################################"
+		echo "################### Done"
+		echo "################################################################"
+		tput sgr0
+		echo
 	fi
 
-	if [ -f /etc/default/grub ];then
-		FIND="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes'"
-		REPLACE="GRUB_CMDLINE_LINUX_DEFAULT='quiet loglevel=3 audit=0 nvme_load=yes nvidia-drm.modeset=1'"
-		sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
-	fi
-
-	echo
-	echo "################################################################"
-	echo "################### Adding option nvidia-drm.modeset=1"
-	echo "################### to SYSTEMD-BOOT entries"
-	echo "################################################################"
-	echo
-
-	# SYSTEMD-BOOT
-	if pacman -Qi arcolinux-bootloader-systemd-boot-git &> /dev/null; then
-		ENTRY_DIR="/boot/efi/loader/entries/"
-		PARAM="nvidia-drm.modeset=1"
-
-		for entry in "$ENTRY_DIR"*.conf; do
-	  	if grep -q "nvidia-drm.modeset=1" "$entry"; then
-	    	echo "Parameter already present in $(basename "$entry")"
-	  	else
-	    	sed -i "/^options / s/options /&$PARAM /" "$entry"
-	    	echo "Added parameter to $(basename "$entry")"
-	  	fi
-		done
-	fi
-
-	echo
-	echo "################################################################"
-	echo "################### Mkinitcpio and update-grub"
-	echo "################################################################"
-	echo
-
-	mkinitcpio -P
-
-	if [ -f /etc/default/grub ];then
-		grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArcoLinux
-		grub-mkconfig -o /boot/grub/grub.cfg
-	fi
-
-	echo
-	tput setaf 6
-	echo "################################################################"
-	echo "################### Done"
-	echo "################################################################"
-	tput sgr0
-	echo
 fi
 
 echo
