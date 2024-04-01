@@ -55,8 +55,15 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
 		sed -i "s/$FIND/$REPLACE/g" /etc/default/grub
 	fi
 
+	echo
+	echo "################################################################"
+	echo "################### Adding option nvidia-drm.modeset=1"
+	echo "################### to SYSTEMD-BOOT entries"
+	echo "################################################################"
+	echo
+
 	# SYSTEMD-BOOT
-	if [ -d /boot/efi/loader/entries/ ];then
+	if pacman -Qi arcolinux-bootloader-systemd-boot-git &> /dev/null; then
 		ENTRY_DIR="/boot/efi/loader/entries/"
 		PARAM="nvidia-drm.modeset=1"
 
