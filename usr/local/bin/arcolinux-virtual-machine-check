@@ -16,7 +16,7 @@
 ###############################################################################
 
 echo "###########################################"
-echo "ArcoLinux virtual machine check start"
+echo "Start ArcoLinux virtual machine check"
 echo "###########################################"
 
 result=$(systemd-detect-virt)
@@ -187,5 +187,5 @@ if [ $result = "none" ];
 fi
 
 echo "########################################"
-echo "ArcoLinux virtual machine check end"
+echo "End ArcoLinux virtual machine check"
 echo "########################################"

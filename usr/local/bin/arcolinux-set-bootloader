@@ -38,11 +38,6 @@ if [ -f /boot/efi/loader/loader.conf ]; then
 fi
 echo "End installation systemd-boot packages"
 
-echo "#################################"
-echo "Permission of root set to 700"
-echo "#################################"
-chmod -v 700 /root
-
 echo
 echo "#################################"
 echo "End arcolinux-set-bootloader"

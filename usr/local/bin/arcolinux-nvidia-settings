@@ -6,14 +6,14 @@ echo "Start arcolinux-nvidia-settings"
 echo "#################################"
 echo
 
-echo
-echo "################################################################"
-echo "###### Making sure nvidia-dkms is installed or else do nothing"
-echo "################################################################"
-echo
-
 # Just checking if nvidia-dkms is installed else stop
 if pacman -Qi nvidia-dkms &> /dev/null; then
+
+	echo
+	echo "################################################################"
+	echo "###### Making sure nvidia-dkms is installed or else do nothing"
+	echo "################################################################"
+	echo
 
 	echo "################################################################"
 	echo "#########  Checking ..."$package" is installed... we can continue"
@@ -35,16 +35,6 @@ if pacman -Qi nvidia-dkms &> /dev/null; then
 	FIND='MODULES=()'
 	REPLACE='MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
 	sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
-
-	# echo
-	# echo "################################################################"
-	# echo "################### Adding option nvidia-drm.modeset=1"
-	# echo "################### to the kernel"
-	# echo "################################################################"
-	# echo
-
-	# echo "options nvidia-drm modeset=1" | tee  /etc/modprobe.d/nvidia-wayland.conf
-
 
 	echo
 	echo "################################################################"
@@ -88,6 +78,6 @@ fi
 
 echo
 echo "#################################"
-echo "Start arcolinux-nvidia-settings"
+echo "End arcolinux-nvidia-settings"
 echo "#################################"
 echo
