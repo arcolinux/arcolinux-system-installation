@@ -25,7 +25,6 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 		echo "################### Adding nvidia modules for Wayland and Nvidia"
 		echo "################### MODULES= nvidia nvidia_modeset nvidia_uvm nvidia_drm"
 		echo "################### in /etc/mkinitcpio.conf"
-		echo "################### and rebuilding /boot files"
 		echo "################################################################"
 		echo
 
@@ -37,29 +36,33 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 		REPLACE='MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
 		sed -i "s/$FIND/$REPLACE/g" /etc/mkinitcpio.conf
 
-		echo
-		echo "################################################################"
-		echo "################### Adding option nvidia-drm.modeset=1"
-		echo "################### to /etc/default/grub"
-		echo "################################################################"
-		echo
-
+		# GRUB
 		if [ -f /etc/default/grub ];then
+
+			echo
+			echo "################################################################"
+			echo "################### Adding option nvidia-drm.modeset=1"
+			echo "################### to /etc/default/grub"
+			echo "################################################################"
+			echo
 			sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/ s/\"$/ nvidia-drm.modeset=1\"/" /etc/default/grub
+			
+			echo "Writing grub to /bootloader"
+			echo "grub" | dd of="/bootloader"		
+
 		fi
 
-		echo "Writing grub to /bootloader"
-		echo "grub" | dd of="/bootloader"
-		
-		echo
-		echo "################################################################"
-		echo "################### Adding option nvidia-drm.modeset=1"
-		echo "################### to SYSTEMD-BOOT entries"
-		echo "################################################################"
-		echo
 
 		# SYSTEMD-BOOT
 		if pacman -Qi arcolinux-bootloader-systemd-boot-git &> /dev/null; then
+
+			echo
+			echo "################################################################"
+			echo "################### Adding option nvidia-drm.modeset=1"
+			echo "################### to SYSTEMD-BOOT entries"
+			echo "################################################################"
+			echo
+
 			ENTRY_DIR="/boot/efi/loader/entries/"
 			PARAM="nvidia-drm.modeset=1"
 
@@ -77,6 +80,13 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 
 		# REFIND
 		if [ -f /boot/refind_linux.conf ]; then
+
+			echo
+			echo "################################################################"
+			echo "################### Adding option nvidia-drm.modeset=1"
+			echo "################### to /boot/refind_linux.conf"
+			echo "################################################################"
+			echo
 
 			CONF_FILE="/boot/refind_linux.conf"
 			PARAM="nvidia-drm.modeset=1"
@@ -141,6 +151,14 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 
 		# GRUB
         if [ -f /etc/default/grub ]; then
+
+        	echo
+			echo "################################################################"
+			echo "################### Removing option nvidia-drm.modeset=1"
+			echo "################### from /etc/default/grub"
+			echo "################################################################"
+			echo
+
             if grep -q "nvidia-drm.modeset=1" /etc/default/grub; then
                 sed -i "s/ nvidia-drm.modeset=1//" /etc/default/grub
                 echo "Removed 'nvidia-drm.modeset=1' from GRUB_CMDLINE_LINUX_DEFAULT in /etc/default/grub"
@@ -155,6 +173,14 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 
         # SYSTEMD-BOOT
         if [ -d /boot/efi/loader/entries/ ]; then
+
+        	echo
+			echo "################################################################"
+			echo "################### Removing option nvidia-drm.modeset=1"
+			echo "################### from /boot/efi/loader/entries"
+			echo "################################################################"
+			echo
+
             ENTRY_DIR="/boot/efi/loader/entries/"
             PARAM="nvidia-drm.modeset=1"
 
@@ -172,6 +198,14 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 
         # REFIND
         if [ -f /boot/refind_linux.conf ]; then
+
+        	echo
+			echo "################################################################"
+			echo "################### Removing option nvidia-drm.modeset=1"
+			echo "################### from /boot/refind_linux.conf"
+			echo "################################################################"
+			echo
+
 	        CONF_FILE="/boot/refind_linux.conf"
 
 	        # Function to remove the parameter from a line
