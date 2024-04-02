@@ -13,7 +13,7 @@ echo "#############################################################"
 echo
 if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/wayland-sessions/sway.desktop ] || [ -f /usr/share/wayland-sessions/wayfire.desktop ]; then
 
-	# Just checking if nvidia-dkms is installed else stop
+	# Just checking if nvidia-dkms is installed
 	if pacman -Qi nvidia-dkms &> /dev/null; then
 
 		echo "################################################################"
@@ -110,23 +110,26 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 
 		echo
 		echo "################################################################"
-		echo "################### Mkinitcpio and update-grub"
+		echo "################### Start mkinitcpio -P"
 		echo "################################################################"
 		echo
 
 		mkinitcpio -P
 
 		if [ -f /etc/default/grub ];then
+			echo
+			echo "################################################################"
+			echo "################### Updating Grub"
+			echo "################################################################"
+			echo
 			grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ArcoLinux
 			grub-mkconfig -o /boot/grub/grub.cfg
 		fi
 
 		echo
-		tput setaf 6
 		echo "################################################################"
 		echo "################### Done"
 		echo "################################################################"
-		tput sgr0
 		echo
 	else
 
@@ -160,34 +163,35 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
         fi
 
         # REFIND
-        CONF_FILE="/boot/refind_linux.conf"
+        if [ -f /boot/refind_linux.conf ]; then
+	        CONF_FILE="/boot/refind_linux.conf"
 
-        # Function to remove the parameter from a line
-        remove_param() {
-            echo "$1" | sed "s/ $PARAM//"
-        }
+	        # Function to remove the parameter from a line
+	        remove_param() {
+	            echo "$1" | sed "s/ $PARAM//"
+	        }
 
-        PARAM="nvidia-drm.modeset=1"
+	        PARAM="nvidia-drm.modeset=1"
 
-        if [ -f "$CONF_FILE" ]; then
-            if grep -q "$PARAM" "$CONF_FILE"; then
-                while IFS= read -r line; do
-                    if [[ "$line" =~ \"$ ]]; then
-                        line=$(remove_param "$line")
-                    fi
-                    echo "$line"
-                done < "$CONF_FILE" > "${CONF_FILE}.tmp"
+	        if [ -f "$CONF_FILE" ]; then
+	            if grep -q "$PARAM" "$CONF_FILE"; then
+	                while IFS= read -r line; do
+	                    if [[ "$line" =~ \"$ ]]; then
+	                        line=$(remove_param "$line")
+	                    fi
+	                    echo "$line"
+	                done < "$CONF_FILE" > "${CONF_FILE}.tmp"
 
-                # Replace the original file with the modified one
-                mv "${CONF_FILE}.tmp" "$CONF_FILE"
-                echo "Parameter '$PARAM' has been removed from $CONF_FILE."
-            else
-                echo "Parameter '$PARAM' is not present in $CONF_FILE, no need to remove."
-            fi
-        else
-            echo "Configuration file not found: $CONF_FILE, nothing to remove."
-        fi
-
+	                # Replace the original file with the modified one
+	                mv "${CONF_FILE}.tmp" "$CONF_FILE"
+	                echo "Parameter '$PARAM' has been removed from $CONF_FILE."
+	            else
+	                echo "Parameter '$PARAM' is not present in $CONF_FILE, no need to remove."
+	            fi
+	        else
+	            echo "Configuration file not found: $CONF_FILE, nothing to remove."
+	        fi
+	    fi
 	fi
 
 fi
