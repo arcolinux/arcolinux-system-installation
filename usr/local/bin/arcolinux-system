@@ -35,7 +35,7 @@ echo "#################################"
 echo "Bluetooth improvements"
 echo "#################################"
 sed -i "s/#AutoEnable=false/AutoEnable=true/g" /etc/bluetooth/main.conf
-echo 'load-module module-switch-on-connect' | sudo tee --append /etc/pulse/default.pa
+echo 'load-module module-switch-on-connect' | tee --append /etc/pulse/default.pa
 echo
 echo "#################################"
 echo "Cleanup original files"
