@@ -11,6 +11,7 @@ echo "######################################################"
 echo "Begin arcolinux-set-bootloader"
 echo "######################################################"
 
+echo "Writing grub to /bootloader"
 echo "grub" | dd of="/bootloader"
 
 echo "installing refind packages"
@@ -26,7 +27,7 @@ if [ -f /boot/efi/EFI/refind/refind.conf ]; then
 	echo "installing refind packages"
 	pacman -U --noconfirm /usr/local/bin/arcolinux-refind-theme-arco*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/arcolinux-bootloader-refind-git*pkg.tar.zst
-
+	echo "Writing refind to /bootloader"
 	echo "refind" | dd of="/bootloader"
 
 fi
@@ -45,7 +46,7 @@ if [ -f /boot/efi/loader/loader.conf ]; then
 	echo "installing systemd-boot packages"
 	pacman -U --noconfirm /usr/local/bin/pacman-hook-kernel-install*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/arcolinux-bootloader-systemd-boot-git*pkg.tar.zst
-
+	echo "Writing systemd-boot to /bootloader"
 	echo "systemd-boot" | dd of="/bootloader"
 
 fi

@@ -48,6 +48,9 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 			sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/ s/\"$/ nvidia-drm.modeset=1\"/" /etc/default/grub
 		fi
 
+		echo "Writing grub to /bootloader"
+		echo "grub" | dd of="/bootloader"
+		
 		echo
 		echo "################################################################"
 		echo "################### Adding option nvidia-drm.modeset=1"
@@ -68,6 +71,7 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 		    	echo "Added parameter to $(basename "$entry")"
 		  	fi
 			done
+			echo "Writing systemd-boot to /bootloader"
 			echo "systemd-boot" | dd of="/bootloader"
 		fi
 
@@ -104,7 +108,7 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 			# Replace the original file with the modified one
 			mv "${CONF_FILE}.tmp" "$CONF_FILE"
 			echo "Parameter '$PARAM' has been added to $CONF_FILE."
-
+			echo "Writing refind to /bootloader"
 			echo "refind" | dd of="/bootloader"
 		fi
 
@@ -145,6 +149,8 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
             else
                 echo "'nvidia-drm.modeset=1' is not present in /etc/default/grub, no need to remove"
             fi
+        	echo "Writing grub to /bootloader"
+			echo "grub" | dd of="/bootloader"
         fi
 
         # SYSTEMD-BOOT
@@ -160,6 +166,8 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
                     echo "'$PARAM' is not present in $(basename "$entry"), no need to remove"
                 fi
             done
+        	echo "Writing systemd-boot to /bootloader"
+			echo "systemd-boot" | dd of="/bootloader"
         fi
 
         # REFIND
@@ -191,7 +199,18 @@ if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/waylan
 	        else
 	            echo "Configuration file not found: $CONF_FILE, nothing to remove."
 	        fi
+
+	        echo "Writing refind to /bootloader"
+			echo "refind" | dd of="/bootloader"
 	    fi
+
+	    echo
+		echo "################################################################"
+		echo "################### Start mkinitcpio -P"
+		echo "################################################################"
+		echo
+
+		mkinitcpio -P
 	fi
 
 fi
