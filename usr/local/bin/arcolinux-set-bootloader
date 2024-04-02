@@ -1,10 +1,17 @@
 #!/bin/bash
 
+##############################################################
+##############################################################
+#   NO USE OF SUDO HERE
+##############################################################
+##############################################################
+
+
 echo "######################################################"
 echo "Begin arcolinux-set-bootloader"
 echo "######################################################"
 
-echo "grub" | sudo dd of="/bootloader"
+echo "grub" | dd of="/bootloader"
 
 echo "installing refind packages"
 if [ -f /boot/efi/EFI/refind/refind.conf ]; then
@@ -20,7 +27,7 @@ if [ -f /boot/efi/EFI/refind/refind.conf ]; then
 	pacman -U --noconfirm /usr/local/bin/arcolinux-refind-theme-arco*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/arcolinux-bootloader-refind-git*pkg.tar.zst
 
-	echo "refind" | sudo dd of="/bootloader"
+	echo "refind" | dd of="/bootloader"
 
 fi
 echo "End installing refind packages"
@@ -39,7 +46,7 @@ if [ -f /boot/efi/loader/loader.conf ]; then
 	pacman -U --noconfirm /usr/local/bin/pacman-hook-kernel-install*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/arcolinux-bootloader-systemd-boot-git*pkg.tar.zst
 
-	echo "systemd-boot" | sudo dd of="/bootloader"
+	echo "systemd-boot" | dd of="/bootloader"
 
 fi
 echo "End installation systemd-boot packages"
