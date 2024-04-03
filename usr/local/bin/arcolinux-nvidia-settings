@@ -11,7 +11,11 @@ echo "#############################################################"
 echo "Start arcolinux-nvidia-settings only for wayland desktops"
 echo "#############################################################"
 echo
-if [ -f /usr/share/wayland-sessions/hyprland.desktop ] || [ -f /usr/share/wayland-sessions/sway.desktop ] || [ -f /usr/share/wayland-sessions/wayfire.desktop ]; then
+if 	[ -f /usr/share/wayland-sessions/hyprland.desktop ] || \
+	[ -f /usr/share/wayland-sessions/sway.desktop ] || \
+	[ -f /usr/share/wayland-sessions/wayfire.desktop ] || \
+	[ -f /usr/share/wayland-sessions/plasma.desktop ] || \
+	[ -f /usr/share/wayland-sessions/gnome-wayland.desktop ]; then
 
 	# Just checking if nvidia-dkms is installed
 	if pacman -Qi nvidia-dkms &> /dev/null; then
