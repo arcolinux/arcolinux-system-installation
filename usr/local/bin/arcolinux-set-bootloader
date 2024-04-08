@@ -6,6 +6,16 @@
 ##############################################################
 ##############################################################
 
+is_package_installed() {
+    if pacman -Q "$1" &> /dev/null; then
+        echo "Package $1 is installed."
+        return 0  # Success
+    else
+        echo "Package $1 is not installed."
+        return 1  # Failure
+    fi
+}
+
 
 echo "######################################################"
 echo "Begin arcolinux-set-bootloader"
@@ -20,6 +30,13 @@ if [ -f /boot/efi/EFI/refind/refind.conf ]; then
 	echo "removing grub"
 	pacman -R --noconfirm arcolinux-grub-theme-vimix-git
 	pacman -R --noconfirm arcolinux-bootloader-grub-git
+	if is_package_installed grub-customizer; then
+	    echo "Removing grub-customizer..."
+	    sudo pacman -R --noconfirm grub-customizer 
+	else
+	    echo "Grub-customizer is not installed, no need to remove."
+	fi
+	#keep last
 	pacman -R --noconfirm grub
 	rm -r /boot/grub
 	rm /etc/default/grub*
@@ -27,6 +44,7 @@ if [ -f /boot/efi/EFI/refind/refind.conf ]; then
 	echo "installing refind packages"
 	pacman -U --noconfirm /usr/local/bin/arcolinux-refind-theme-arco*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/arcolinux-bootloader-refind-git*pkg.tar.zst
+	mkinitcpio -P
 	echo "Writing refind to /bootloader"
 	echo "refind" | dd of="/bootloader"
 
@@ -39,6 +57,13 @@ if [ -f /boot/efi/loader/loader.conf ]; then
 	echo "removing grub"
 	pacman -R --noconfirm arcolinux-grub-theme-vimix-git
 	pacman -R --noconfirm arcolinux-bootloader-grub-git
+	if is_package_installed grub-customizer; then
+	    echo "Removing grub-customizer..."
+	    sudo pacman -R --noconfirm grub-customizer 
+	else
+	    echo "Grub-customizer is not installed, no need to remove."
+	fi
+	#keep last
 	pacman -R --noconfirm grub
 	rm -r /boot/grub
 	rm /etc/default/grub*
