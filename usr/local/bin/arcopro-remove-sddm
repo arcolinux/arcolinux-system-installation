@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+echo
+echo "#################################"
+echo "Start arcopro-remove-sddm"
+echo "#################################"
+echo
+systemctl disable sddm
+pacman -Rns --noconfirm  sddm
+echo
+echo "#################################"
+echo "End arcopro-remove-sddm"
+echo "#################################"
+echo

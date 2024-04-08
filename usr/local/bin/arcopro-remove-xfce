@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+echo
+echo "#################################"
+echo "Start arcopro-remove-xfce"
+echo "#################################"
+echo
+#systemctl disable sddm
+#pacman -Rns --noconfirm  sddm
+pacman -Rns --noconfirm  xfce4 xfce4-goodies arconet-xfce
+echo
+echo "#################################"
+echo "End arcopro-remove-xfce"
+echo "#################################"
+echo

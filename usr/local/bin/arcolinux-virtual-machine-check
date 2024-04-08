@@ -180,7 +180,7 @@ if [ $result = "none" ];
 			echo "Removed avm-check script"
 		fi
 
-		if [ -f /etc/systemd/system/multi-user.target.wants/virtual-machine-check.service ]; then
+		if [ -L /etc/systemd/system/multi-user.target.wants/virtual-machine-check.service ]; then
 			rm /etc/systemd/system/multi-user.target.wants/virtual-machine-check.service
 			echo "Removed avm-check script"
 		fi
