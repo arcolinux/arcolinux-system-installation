@@ -44,7 +44,6 @@ if [ -f /boot/efi/EFI/refind/refind.conf ]; then
 	echo "installing refind packages"
 	pacman -U --noconfirm /usr/local/bin/arcolinux-refind-theme-arco*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/arcolinux-bootloader-refind-git*pkg.tar.zst
-	mkinitcpio -P
 	echo "Writing refind to /bootloader"
 	echo "refind" | dd of="/bootloader"
 
