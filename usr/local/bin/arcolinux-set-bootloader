@@ -41,6 +41,10 @@ if [ -f /boot/efi/EFI/refind/refind.conf ]; then
 	rm -r /boot/grub
 	rm /etc/default/grub*
 
+	if [ -d /boot/efi/EFI/ArcoLinux ]; then
+		rm -r /boot/efi/EFI/ArcoLinux
+	fi
+
 	echo "installing refind packages"
 	pacman -U --noconfirm /usr/local/bin/arcolinux-refind-theme-arco*pkg.tar.zst
 	pacman -U --noconfirm /usr/local/bin/arcolinux-bootloader-refind-git*pkg.tar.zst
