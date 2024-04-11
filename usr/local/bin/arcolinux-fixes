@@ -24,10 +24,10 @@ case $desktop in
     ;;
 esac
 
-if [ -f /usr/bin/gnome-session ]; then
-  echo "Gdm is installed and active - go back to sddm"
-  pacman -S sddm --noconfirm --needed
-  systemctl enable sddm.service -f
+if [ -f /usr/bin/gdm ]; then
+  echo "Gdm is installed and active - making sure gdm stays active"
+  pacman -S gdm --noconfirm --needed
+  systemctl enable gdm.service -f
 fi
 
 if [ -f /usr/bin/startdde ]; then
