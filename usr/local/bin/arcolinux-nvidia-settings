@@ -115,6 +115,17 @@ if 	[ -f /usr/share/wayland-sessions/hyprland.desktop ] || \
 		    	echo "Added parameter to $(basename "$entry")"
 		  	fi
 			done
+
+			echo
+			echo "################################################################"
+			echo "################### Start mkinitcpio -P"
+			echo "################################################################"
+			echo
+
+			mkinitcpio -P
+
+			sudo bootctl install
+
 			echo "Writing systemd-boot to /bootloader"
 			echo "systemd-boot" | dd of="/bootloader"
 		fi
@@ -159,6 +170,17 @@ if 	[ -f /usr/share/wayland-sessions/hyprland.desktop ] || \
 			# Replace the original file with the modified one
 			mv "${CONF_FILE}.tmp" "$CONF_FILE"
 			echo "Parameter '$PARAM' has been added to $CONF_FILE."
+
+			echo
+			echo "################################################################"
+			echo "################### Start mkinitcpio -P"
+			echo "################################################################"
+			echo
+
+			mkinitcpio -P
+
+			sudo refind-install
+
 			echo "Writing refind to /bootloader"
 			echo "refind" | dd of="/bootloader"
 		fi
