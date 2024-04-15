@@ -65,7 +65,6 @@ if 	[ -f /usr/share/wayland-sessions/hyprland.desktop ] || \
 			echo "################### to /etc/default/grub"
 			echo "################################################################"
 			echo
-			sed -i '/^GRUB_CMDLINE_LINUX_DEFAULT=/s/"$/ nvidia-drm.modeset=1"/' /etc/default/grub
 			sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/s/'$/ nvidia-drm.modeset=1'/" /etc/default/grub
 			
 			echo "Writing grub to /bootloader"
