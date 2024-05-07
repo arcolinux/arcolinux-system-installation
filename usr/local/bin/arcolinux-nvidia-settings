@@ -34,8 +34,8 @@ if 	[ -f /usr/share/wayland-sessions/hyprland.desktop ] || \
 	[ -f /usr/share/wayland-sessions/plasma.desktop ] || \
 	[ -f /usr/share/wayland-sessions/gnome-wayland.desktop ]; then
 
-	# Just checking if nvidia-dkms is installed
-	if pacman -Qi nvidia-dkms &> /dev/null; then
+	# Just checking if there is an nvidia driver installed
+	if pacman -Qq | grep -q "^nvidia"; then
 
 		echo "################################################################"
 		echo "#########  Checking ..."$package" is installed... we can continue"
