@@ -68,7 +68,16 @@ if 	[ -f /usr/share/wayland-sessions/hyprland.desktop ] || \
 				echo "################### to /etc/default/grub"
 				echo "################################################################"
 				echo
-				sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/s/'$/ nvidia-drm.modeset=1'/" /etc/default/grub
+				
+		        # Check and modify the GRUB_CMDLINE_LINUX_DEFAULT line depending on the quoting style
+		        if grep -q "^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"" /etc/default/grub; then
+		            # Handles double quotes
+		            sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/s/\"$/ nvidia-drm.modeset=1\"/" /etc/default/grub
+		        elif grep -q "^GRUB_CMDLINE_LINUX_DEFAULT='.*'" /etc/default/grub; then
+		            # Handles single quotes
+		            sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/s/'$/ nvidia-drm.modeset=1'/" /etc/default/grub
+		        fi
+
 			fi
 
 			echo
