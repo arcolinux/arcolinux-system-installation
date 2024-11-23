@@ -27,7 +27,7 @@ echo "Copy /etc/skel to /root"
 echo "#################################"
 SKEL_DIR="/etc/skel"
 ROOT_DIR="/root"
-cp -aTv "$SKEL_DIR/" "$ROOT_DIR/" || handle_error "Failed to copy skel to root."
+cp -aT "$SKEL_DIR/" "$ROOT_DIR/" || handle_error "Failed to copy skel to root."
 echo
 echo "#################################"
 echo "Cleanup autologin root"
