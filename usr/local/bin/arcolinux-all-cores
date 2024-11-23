@@ -12,22 +12,82 @@
 #   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
 #
 ##################################################################################################################
+
+# Function to check if the user has sudo privileges
+check_sudo() {
+    if ! sudo -v &>/dev/null; then
+        echo "ERROR: You need to have sudo privileges to run this script."
+        exit 1
+    fi
+}
+
+# Function to back up the original makepkg.conf
+backup_makepkg_conf() {
+    if [ ! -f /etc/makepkg.conf.bak ]; then
+        echo "Backing up /etc/makepkg.conf to /etc/makepkg.conf.bak..."
+        sudo cp /etc/makepkg.conf /etc/makepkg.conf.bak
+    else
+        echo "/etc/makepkg.conf.bak already exists. Skipping backup."
+    fi
+}
+
+# Function to restore the makepkg.conf from backup
+restore_makepkg_conf() {
+    if [ -f /etc/makepkg.conf.bak ]; then
+        echo "Restoring /etc/makepkg.conf from backup..."
+        sudo cp /etc/makepkg.conf.bak /etc/makepkg.conf
+    else
+        echo "ERROR: No backup found. Cannot restore makepkg.conf."
+        exit 1
+    fi
+}
+
+# numberofcores=$(nproc)
+
+# if [ $numberofcores -gt 1 ];then
+#         echo "Changing the makeflags for "$numberofcores" cores."
+#         sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j'$(($numberofcores))'"/g' /etc/makepkg.conf;
+#         echo "Changing the PKGEXT to pkg.tar.zst"
+#         sed -i "s/PKGEXT='.pkg.tar.xz'/PKGEXT='.pkg.tar.zst'/g" /etc/makepkg.conf
+# else
+#         echo "No change."
+# fi
+
+# Function to perform the optimizations
+optimize_makepkg_conf() {
+    numberofcores=$(nproc)
+
+    if (( numberofcores > 1 )); then
+        echo "TOTAL CORES : $numberofcores"
+        echo "Changing makeflags for $numberofcores cores."
+
+        # Update MAKEFLAGS to utilize all available cores
+        sudo sed -i "/^MAKEFLAGS=/c\MAKEFLAGS=\"-j$((numberofcores+1))\"" /etc/makepkg.conf
+
+        echo "Changing Compression..."
+        # Enable multi-threaded compression for xz and zstd
+        sudo sed -i 's/COMPRESSXZ=(xz -c -z -)/COMPRESSXZ=(xz -c -z --threads=0 -)/g' /etc/makepkg.conf
+        sudo sed -i 's/COMPRESSZST=(zstd -c -z -)/COMPRESSZST=(zstd -c -z --threads=0 -)/g' /etc/makepkg.conf
+
+        echo "Changing Default PKGEXT..."
+        # Change the default package extension to use zstd
+        sudo sed -i 's/PKGEXT=.pkg.tar.xz/PKGEXT=.pkg.tar.zst/g' /etc/makepkg.conf
+    else
+        echo "Nothing changed, only one core detected."
+    fi
+}
 echo
 echo "#################################"
 echo "Start arcolinux-all-cores"
 echo "#################################"
 echo
 
-numberofcores=$(nproc)
+check_sudo
+backup_makepkg_conf
 
-if [ $numberofcores -gt 1 ];then
-        echo "Changing the makeflags for "$numberofcores" cores."
-        sed -i 's/#MAKEFLAGS="-j2"/MAKEFLAGS="-j'$(($numberofcores))'"/g' /etc/makepkg.conf;
-        echo "Changing the PKGEXT to pkg.tar.zst"
-        sed -i "s/PKGEXT='.pkg.tar.xz'/PKGEXT='.pkg.tar.zst'/g" /etc/makepkg.conf
-else
-        echo "No change."
-fi
+# Try to apply optimizations and handle any issues
+trap 'echo "An error occurred. Restoring the previous makepkg.conf..."; restore_makepkg_conf' ERR
+optimize_makepkg_conf
 
 echo
 echo "#################################"

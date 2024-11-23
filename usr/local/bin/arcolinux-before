@@ -1,29 +1,81 @@
 #!/bin/bash
+
+# Function to log messages
+log_message() {
+    echo "[INFO] $1"
+}
+
+# Function to log error messages
+log_error() {
+    echo "[ERROR] $1" >&2
+}
+
+# Function to check for sudo privileges
+# Although it is not necessary, I think it is a good practice to check for sudo privileges
+
+check_sudo() {
+    if ! sudo -v &>/dev/null; then
+        log_error "You need to have sudo privileges to run this script."
+        exit 1
+    fi
+}
+
 echo "#################################"
 echo "Start arcolinux-before"
 echo "#################################"
 echo
+
+# Ensure sudo privileges are available
+check_sudo
+
 echo "#################################"
 echo "Populate Core Team keys"
 echo "#################################"
 echo
-pacman-key --init
-pacman-key --populate archlinux
-pacman-key --populate arcolinux
-pacman-key --populate chaotic
-echo
+# pacman-key --init
+# pacman-key --populate archlinux
+# pacman-key --populate arcolinux
+# pacman-key --populate chaotic
+# echo
+
+if ! sudo pacman-key --init; then
+    log_error "Failed to initialize pacman keys."
+    exit 1
+fi
+
+if ! sudo pacman-key --populate arcolinux archlinux chaotic; then
+    log_error "Failed to populate pacman keys."
+    exit 1
+fi
+
 
 echo "#################################"
 echo "Copy grub Vimix theme (archiso deletes /boot when making the ISO)"
 echo "#################################"
-mkdir -p /boot/grub/themes
-cp -Rf /usr/share/grub/themes/Vimix /boot/grub/themes/
+# mkdir -p /boot/grub/themes
+# cp -Rf /usr/share/grub/themes/Vimix /boot/grub/themes/
+
+if [ ! -f /tmp/systemd-boot ]; then
+    log_message "Copying Vimix Grub Theme..."
+    sudo mkdir -p /boot/grub/themes
+    if ! sudo cp -Rf /usr/share/grub/themes/Vimix /boot/grub/themes/; then
+        log_error "Failed to copy Vimix Grub Theme."
+        exit 1
+    fi
+else
+    log_message "Vimix Grub Theme already copied. Skipping."
+fi
 
 echo
 echo "#################################"
 echo "Changing into our own linux.preset"
 echo "#################################"
-mv -v /etc/mkinitcpio.d/arcolinux /etc/mkinitcpio.d/linux.preset
+# mv -v /etc/mkinitcpio.d/arcolinux /etc/mkinitcpio.d/linux.preset
+if ! sudo mv -v /etc/mkinitcpio.d/arcolinux /etc/mkinitcpio.d/linux.preset; then
+    log_error "Failed to set Arcolinux Preset."
+    exit 1
+fi
+
 echo
 echo "#################################"
 echo "End arcolinux-before"
