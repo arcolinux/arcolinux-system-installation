@@ -6,35 +6,11 @@ echo "Start arcolinux-system"
 echo "#################################"
 echo
 
-# Define constants for log files
-LOG_FILE="/var/log/arcolinux_config.log"
-ERROR_LOG="/var/log/arcolinux_config_error.log"
-
-# Define a function to print a message with a blank line before and after
-print_message() {
-  echo
-  echo "$1"
-  echo
-  echo "$1" >> "$LOG_FILE"
-}
-
 # Define a function to handle errors
 handle_error() {
-  echo "Error: $1" | tee -a "$ERROR_LOG"
+  echo "Error: $1"
   exit 1
 }
-
-# Function to check for required commands
-check_command() {
-  command -v "$1" > /dev/null || handle_error "Command '$1' not found. Please install it."
-}
-
-# Check for required commands
-check_command "chmod"
-check_command "cp"
-check_command "rm"
-check_command "sed"
-check_command "tee"
 
 echo
 echo "#################################"
@@ -49,7 +25,9 @@ echo
 echo "#################################"
 echo "Copy /etc/skel to /root"
 echo "#################################"
-cp -aT /etc/skel/ /root/ || handle_error "Failed to copy /skel to /root"
+SKEL_DIR="/etc/skel"
+ROOT_DIR="/root"
+cp -aTv "$SKEL_DIR/" "$ROOT_DIR/" || handle_error "Failed to copy skel to root."
 echo
 echo "#################################"
 echo "Cleanup autologin root"
@@ -60,12 +38,14 @@ echo
 echo "#################################"
 echo "Setting editor to nano"
 echo "#################################"
-echo "EDITOR=nano" >> /etc/profile
+grep -qxF 'EDITOR=nano' /etc/profile || echo "EDITOR=nano" >> /etc/profile
 echo
 echo "#################################"
 echo "Bluetooth improvements"
 echo "#################################"
-sed -i "s/#AutoEnable=false/AutoEnable=true/g" /etc/bluetooth/main.conf || handle_error "Failed to fix bluetooth"
+echo
+echo "Autoenable=true in /etc/bluetooth/main.conf"
+sed -i "s/#AutoEnable=true/AutoEnable=true/g" /etc/bluetooth/main.conf || handle_error "Failed to fix bluetooth"
 echo 'load-module module-switch-on-connect' | tee --append /etc/pulse/default.pa || handle_error "Failed to fix bluetooth"
 echo
 echo "#################################"
@@ -85,6 +65,7 @@ mv -v /etc/arcolinux-release /etc/lsb-release || handle_error "Failed to move ar
 echo "#################################"
 echo "Permission of root set to 700"
 echo "#################################"
+echo "Root permissions set to 700"
 chmod -v 700 /root || handle_error "Failed to set root permission."
 
 echo

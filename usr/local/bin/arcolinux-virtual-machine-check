@@ -15,30 +15,11 @@
 #
 ###############################################################################
 
-
-LOG_FILE="/var/log/arcolinux_vm_check.log"
-ERROR_LOG="/var/log/arcolinux_vm_check_error.log"
-
-# Log a message to the log file
-log_message() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$LOG_FILE"
-}
-
-# Log an error message and exit
-log_error() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - ERROR: $1" | tee -a "$ERROR_LOG"
-    exit 1
-}
-
 echo "###########################################"
 echo "Start ArcoLinux virtual machine check"
 echo "###########################################"
 
 result=$(systemd-detect-virt)
-# What if we are unable to detect the virtualization platform?
-if [ $? -ne 0 ]; then
-    log_error "Failed to detect virtualization platform."
-fi
 
 while [ -e "/var/lib/pacman/db.lck" ];
 do
@@ -53,194 +34,157 @@ done
 
 echo "You are working on "$result
 
-# if [ $result = "oracle" ];
-# 	then
-# 		#remove vmware
-# 		if [ -f /etc/xdg/autostart/vmware-user.desktop ]; then
-#    			rm /etc/xdg/autostart/vmware-user.desktop
-# 			echo "Removed vmware-user.desktop"
-# 		fi
+if [ $result = "oracle" ];
+	then
+		#remove vmware
+		if [ -f /etc/xdg/autostart/vmware-user.desktop ]; then
+   			rm /etc/xdg/autostart/vmware-user.desktop
+			echo "Removed vmware-user.desktop"
+		fi
 
-# 		if pacman -Qi open-vm-tools &> /dev/null; then
-# 			systemctl disable vmware-vmblock-fuse.service
-# 			systemctl disable vmtoolsd.service
-# 			echo "Disabled vmtoolsd.service"
-# 			pacman -Rns open-vm-tools --noconfirm
-# 			echo "Removed open-vm-tools"
-# 		fi
+		if pacman -Qi open-vm-tools &> /dev/null; then
+			systemctl disable vmware-vmblock-fuse.service
+			systemctl disable vmtoolsd.service
+			echo "Disabled vmtoolsd.service"
+			pacman -Rns open-vm-tools --noconfirm
+			echo "Removed open-vm-tools"
+		fi
 
-# 		if pacman -Qi xf86-video-vmware &> /dev/null; then
-# 			pacman -Rns xf86-video-vmware --noconfirm
-# 			echo "Removed xf86-video-vmware"
-# 		fi
+		if pacman -Qi xf86-video-vmware &> /dev/null; then
+			pacman -Rns xf86-video-vmware --noconfirm
+			echo "Removed xf86-video-vmware"
+		fi
 
-# 		if [ -f /etc/systemd/system/multi-user.target.wants/vmtoolsd.service ]; then
-# 	   		rm /etc/systemd/system/multi-user.target.wants/vmtoolsd.service
-# 			echo "Removed vmtoolsd.service if still exists"
-# 		fi
+		if [ -f /etc/systemd/system/multi-user.target.wants/vmtoolsd.service ]; then
+	   		rm /etc/systemd/system/multi-user.target.wants/vmtoolsd.service
+			echo "Removed vmtoolsd.service if still exists"
+		fi
 
-# 		#remove qemu
-# 		if pacman -Qi qemu-guest-agent &> /dev/null; then
-# 			systemctl disable qemu-guest-agent.service
-# 			pacman -Rns qemu-guest-agent --noconfirm
-# 			echo "Removed qemu-guest-agent"
-# 		fi
-# fi
+		#remove qemu
+		if pacman -Qi qemu-guest-agent &> /dev/null; then
+			systemctl disable qemu-guest-agent.service
+			pacman -Rns qemu-guest-agent --noconfirm
+			echo "Removed qemu-guest-agent"
+		fi
+fi
 
-# if [ $result = "kvm" ];
-# 	then
-# 		#remove vmware
-# 		if [ -f /etc/xdg/autostart/vmware-user.desktop ]; then
-#    			rm /etc/xdg/autostart/vmware-user.desktop
-# 			echo "Removed vmware-user.desktop"
-# 		fi
+if [ $result = "kvm" ];
+	then
+		#remove vmware
+		if [ -f /etc/xdg/autostart/vmware-user.desktop ]; then
+   			rm /etc/xdg/autostart/vmware-user.desktop
+			echo "Removed vmware-user.desktop"
+		fi
 
-# 		if pacman -Qi open-vm-tools &> /dev/null; then
-# 			systemctl disable vmware-vmblock-fuse.service
-# 			systemctl disable vmtoolsd.service
-# 			echo "Disabled vmtoolsd.service"
-# 			pacman -Rns open-vm-tools --noconfirm
-# 			echo "Removed open-vm-tools"
-# 		fi
+		if pacman -Qi open-vm-tools &> /dev/null; then
+			systemctl disable vmware-vmblock-fuse.service
+			systemctl disable vmtoolsd.service
+			echo "Disabled vmtoolsd.service"
+			pacman -Rns open-vm-tools --noconfirm
+			echo "Removed open-vm-tools"
+		fi
 
-# 		if pacman -Qi xf86-video-vmware &> /dev/null; then
-# 			pacman -Rns xf86-video-vmware --noconfirm
-# 			echo "Removed xf86-video-vmware"
-# 		fi
+		if pacman -Qi xf86-video-vmware &> /dev/null; then
+			pacman -Rns xf86-video-vmware --noconfirm
+			echo "Removed xf86-video-vmware"
+		fi
 
-# 		if [ -f /etc/systemd/system/multi-user.target.wants/vmtoolsd.service ]; then
-# 	   		rm /etc/systemd/system/multi-user.target.wants/vmtoolsd.service
-# 			echo "Removed vmtoolsd.service if still exists"
-# 		fi
+		if [ -f /etc/systemd/system/multi-user.target.wants/vmtoolsd.service ]; then
+	   		rm /etc/systemd/system/multi-user.target.wants/vmtoolsd.service
+			echo "Removed vmtoolsd.service if still exists"
+		fi
 
-# 		#remove virtualbox
-# 		if pacman -Qi virtualbox-guest-utils &> /dev/null; then
-# 			systemctl disable vboxservice.service
-# 			pacman -Rns virtualbox-guest-utils --noconfirm
-# 			echo "Removed virtualbox-guest-utils"
-# 		fi
-# 		if pacman -Qi virtualbox-guest-utils-nox &> /dev/null; then
-# 			systemctl disable vboxservice.service
-# 			pacman -Rns virtualbox-guest-utils-nox --noconfirm
-# 			echo "Removed virtualbox-guest-utils-nox"
-# 		fi
-# fi
+		#remove virtualbox
+		if pacman -Qi virtualbox-guest-utils &> /dev/null; then
+			systemctl disable vboxservice.service
+			pacman -Rns virtualbox-guest-utils --noconfirm
+			echo "Removed virtualbox-guest-utils"
+		fi
+		if pacman -Qi virtualbox-guest-utils-nox &> /dev/null; then
+			systemctl disable vboxservice.service
+			pacman -Rns virtualbox-guest-utils-nox --noconfirm
+			echo "Removed virtualbox-guest-utils-nox"
+		fi
+fi
 
-# if [ $result = "vmware" ];
-# 	then
-# 		#remove virtualbox
-# 		if pacman -Qi virtualbox-guest-utils &> /dev/null; then
-# 			systemctl disable vboxservice.service
-# 			pacman -Rns virtualbox-guest-utils --noconfirm
-# 			echo "Removed virtualbox-guest-utils"
-# 		fi
-# 		if pacman -Qi virtualbox-guest-utils-nox &> /dev/null; then
-# 			systemctl disable vboxservice.service
-# 			pacman -Rns virtualbox-guest-utils-nox --noconfirm
-# 			echo "Removed virtualbox-guest-utils-nox"
-# 		fi
+if [ $result = "vmware" ];
+	then
+		#remove virtualbox
+		if pacman -Qi virtualbox-guest-utils &> /dev/null; then
+			systemctl disable vboxservice.service
+			pacman -Rns virtualbox-guest-utils --noconfirm
+			echo "Removed virtualbox-guest-utils"
+		fi
+		if pacman -Qi virtualbox-guest-utils-nox &> /dev/null; then
+			systemctl disable vboxservice.service
+			pacman -Rns virtualbox-guest-utils-nox --noconfirm
+			echo "Removed virtualbox-guest-utils-nox"
+		fi
 
-# 		#remove qemu
-# 		if pacman -Qi qemu-guest-agent &> /dev/null; then
-# 			systemctl disable qemu-guest-agent.service
-# 			pacman -Rns qemu-guest-agent --noconfirm
-# 			echo "Removed qemu-guest-agent"
-# 		fi
-# fi
+		#remove qemu
+		if pacman -Qi qemu-guest-agent &> /dev/null; then
+			systemctl disable qemu-guest-agent.service
+			pacman -Rns qemu-guest-agent --noconfirm
+			echo "Removed qemu-guest-agent"
+		fi
+fi
 
-# if [ $result = "none" ];
-# 	then
-# 		#remove virtualbox
-# 		if pacman -Qi virtualbox-guest-utils &> /dev/null; then
-# 			systemctl disable vboxservice.service
-# 			pacman -Rns virtualbox-guest-utils --noconfirm
-# 			echo "Removed virtualbox-guest-utils"
-# 		fi
+if [ $result = "none" ];
+	then
+		#remove virtualbox
+		if pacman -Qi virtualbox-guest-utils &> /dev/null; then
+			systemctl disable vboxservice.service
+			pacman -Rns virtualbox-guest-utils --noconfirm
+			echo "Removed virtualbox-guest-utils"
+		fi
 
-# 		if pacman -Qi virtualbox-guest-utils-nox &> /dev/null; then
-# 			systemctl disable vboxservice.service
-# 			pacman -Rns virtualbox-guest-utils-nox --noconfirm
-# 			echo "Removed virtualbox-guest-utils-nox"
-# 		fi
+		if pacman -Qi virtualbox-guest-utils-nox &> /dev/null; then
+			systemctl disable vboxservice.service
+			pacman -Rns virtualbox-guest-utils-nox --noconfirm
+			echo "Removed virtualbox-guest-utils-nox"
+		fi
 
-# 		#remove vmware
-# 		if [ -f /etc/xdg/autostart/vmware-user.desktop ]; then
-# 	   		rm /etc/xdg/autostart/vmware-user.desktop
-# 			echo "Removed vmware-user.desktop"
-# 		fi
+		#remove vmware
+		if [ -f /etc/xdg/autostart/vmware-user.desktop ]; then
+	   		rm /etc/xdg/autostart/vmware-user.desktop
+			echo "Removed vmware-user.desktop"
+		fi
 
-# 		if pacman -Qi open-vm-tools &> /dev/null; then
-# 			systemctl disable vmware-vmblock-fuse.service
-# 			systemctl disable vmtoolsd.service
-# 			echo "Disabled vmtoolsd.service"
-# 			pacman -Rns open-vm-tools --noconfirm
-# 			echo "Removed open-vm-tools"
-# 		fi
+		if pacman -Qi open-vm-tools &> /dev/null; then
+			systemctl disable vmware-vmblock-fuse.service
+			systemctl disable vmtoolsd.service
+			echo "Disabled vmtoolsd.service"
+			pacman -Rns open-vm-tools --noconfirm
+			echo "Removed open-vm-tools"
+		fi
 
-# 		if pacman -Qi xf86-video-vmware &> /dev/null; then
-# 			pacman -Rns xf86-video-vmware --noconfirm
-# 			echo "Removed xf86-video-vmware"
-# 		fi
+		if pacman -Qi xf86-video-vmware &> /dev/null; then
+			pacman -Rns xf86-video-vmware --noconfirm
+			echo "Removed xf86-video-vmware"
+		fi
 
-# 		if [ -f /etc/systemd/system/multi-user.target.wants/vmtoolsd.service ]; then
-# 	   		rm /etc/systemd/system/multi-user.target.wants/vmtoolsd.service
-# 			echo "Removed vmtoolsd.service if still exists"
-# 		fi
+		if [ -f /etc/systemd/system/multi-user.target.wants/vmtoolsd.service ]; then
+	   		rm /etc/systemd/system/multi-user.target.wants/vmtoolsd.service
+			echo "Removed vmtoolsd.service if still exists"
+		fi
 
-# 		#remove qemu
-# 		if pacman -Qi qemu-guest-agent &> /dev/null; then
-# 			systemctl disable qemu-guest-agent.service
-# 			pacman -Rns qemu-guest-agent --noconfirm
-# 			echo "Removed qemu-guest-agent"
-# 		fi
+		#remove qemu
+		if pacman -Qi qemu-guest-agent &> /dev/null; then
+			systemctl disable qemu-guest-agent.service
+			pacman -Rns qemu-guest-agent --noconfirm
+			echo "Removed qemu-guest-agent"
+		fi
 
-# 		if [ -f /usr/local/bin/arcolinux-virtual-machine-check ]; then
-# 	   		rm /usr/local/bin/arcolinux-virtual-machine-check
-# 			echo "Removed avm-check script"
-# 		fi
+		if [ -f /usr/local/bin/arcolinux-virtual-machine-check ]; then
+	   		rm /usr/local/bin/arcolinux-virtual-machine-check
+			echo "Removed avm-check script"
+		fi
 
-# 		if [ -L /etc/systemd/system/multi-user.target.wants/virtual-machine-check.service ]; then
-# 			rm /etc/systemd/system/multi-user.target.wants/virtual-machine-check.service
-# 			echo "Removed avm-check script"
-# 		fi
-# fi
-
-# Define packages to remove for each virtualization platform
-declare -A packages_to_remove
-packages_to_remove[oracle]="open-vm-tools xf86-video-vmware qemu-guest-agent"
-packages_to_remove[kvm]="open-vm-tools xf86-video-vmware virtualbox-guest-utils virtualbox-guest-utils-nox"
-packages_to_remove[vmware]="virtualbox-guest-utils virtualbox-guest-utils-nox qemu-guest-agent"
-packages_to_remove[none]="virtualbox-guest-utils virtualbox-guest-utils-nox qemu-guest-agent open-vm-tools xf86-video-vmware"
-
-# Remove packages and disable services
-log_message "Removing platform-specific packages and services..."
-for package in ${packages_to_remove[$result]}; do
-    if pacman -Qi $package &> /dev/null; then
-        systemctl disable $package.service || log_error "Failed to disable service $package.service"
-        pacman -Rns $package --noconfirm || log_error "Failed to remove package $package"
-        log_message "[REMOVED] $package"
-    else
-        log_message "[SKIPPED] $package is not installed."
-    fi
-done
-
-# Remove additional files specific to VMware or other platforms
-remove_file() {
-    local file=$1
-    if [ -f "$file" ]; then
-        rm -v "$file" || log_error "Failed to remove $file"
-        log_message "[REMOVED] $file"
-    else
-        log_message "[SKIPPED] $file does not exist."
-    fi
-}
-
-remove_file "/etc/xdg/autostart/vmware-user.desktop"
-remove_file "/etc/systemd/system/multi-user.target.wants/vmtoolsd.service"
-remove_file "/usr/local/bin/arcolinux-virtual-machine-check"
-remove_file "/etc/systemd/system/multi-user.target.wants/virtual-machine-check.service"
-
-# log_message "Virtual machine check completed successfully."
+		if [ -L /etc/systemd/system/multi-user.target.wants/virtual-machine-check.service ]; then
+			rm /etc/systemd/system/multi-user.target.wants/virtual-machine-check.service
+			echo "Removed avm-check script"
+		fi
+fi
 
 echo "########################################"
 echo "End ArcoLinux virtual machine check"
