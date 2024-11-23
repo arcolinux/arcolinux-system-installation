@@ -6,24 +6,55 @@ echo "Start arcolinux-system"
 echo "#################################"
 echo
 
+# Define constants for log files
+LOG_FILE="/var/log/arcolinux_config.log"
+ERROR_LOG="/var/log/arcolinux_config_error.log"
+
+# Define a function to print a message with a blank line before and after
+print_message() {
+  echo
+  echo "$1"
+  echo
+  echo "$1" >> "$LOG_FILE"
+}
+
+# Define a function to handle errors
+handle_error() {
+  echo "Error: $1" | tee -a "$ERROR_LOG"
+  exit 1
+}
+
+# Function to check for required commands
+check_command() {
+  command -v "$1" > /dev/null || handle_error "Command '$1' not found. Please install it."
+}
+
+# Check for required commands
+check_command "chmod"
+check_command "cp"
+check_command "rm"
+check_command "sed"
+check_command "tee"
+
 echo
 echo "#################################"
 echo "Permissions of important folders"
 echo "#################################"
-chmod 750 /etc/sudoers.d
-chmod 750 /etc/polkit-1/rules.d
-chgrp polkitd /etc/polkit-1/rules.d
+chmod 750 /etc/sudoers.d || handle_error "Failed to change permissions for /etc/sudoers.d"
+chmod 750 /etc/polkit-1/rules.d || handle_error "Failed to change permissions for /etc/polkit-1/rules.d"
+chgrp polkitd /etc/polkit-1/rules.d || handle_error "Failed to change group for /etc/polkit-1/rules.d"
 echo
+
 echo
 echo "#################################"
 echo "Copy /etc/skel to /root"
 echo "#################################"
-cp -aT /etc/skel/ /root/
+cp -aT /etc/skel/ /root/ || handle_error "Failed to copy /skel to /root"
 echo
 echo "#################################"
 echo "Cleanup autologin root"
 echo "#################################"
-rm -rfv /etc/systemd/system/getty@tty1.service.d
+rm -rfv /etc/systemd/system/getty@tty1.service.d || handle_error "Failed to remove autologin"
 echo
 echo
 echo "#################################"
@@ -34,22 +65,27 @@ echo
 echo "#################################"
 echo "Bluetooth improvements"
 echo "#################################"
-sed -i "s/#AutoEnable=true/AutoEnable=true/g" /etc/bluetooth/main.conf
-echo 'load-module module-switch-on-connect' | tee --append /etc/pulse/default.pa
+sed -i "s/#AutoEnable=false/AutoEnable=true/g" /etc/bluetooth/main.conf || handle_error "Failed to fix bluetooth"
+echo 'load-module module-switch-on-connect' | tee --append /etc/pulse/default.pa || handle_error "Failed to fix bluetooth"
 echo
 echo "#################################"
 echo "Cleanup original files"
 echo "#################################"
-rm -fv /etc/sudoers.d/g_wheel
-rm -rfv /usr/share/backgrounds/xfce
-rm -fv /etc/polkit-1/rules.d/49-nopasswd_global.rules
-rm -v /root/{.automated_script.sh,.zlogin}
-mv -v /etc/arcolinux-release /etc/lsb-release
+rm -fv /etc/sudoers.d/g_wheel || handle_error "Failed to remove g_wheel"
+rm -rfv /usr/share/backgrounds/xfce || handle_error "Failed to remove xfce backgrounds"
+rm -fv /etc/polkit-1/rules.d/49-nopasswd_global.rules || handle_error "Failed to remove nopasswd_global"
+if [ -f /root/.automated_script.sh ]; then
+  rm -v /root/.automated_script.sh || handle_error "Failed to remove automated script"
+fi
+if [ -f /root/.zlogin ]; then
+  rm -v /root/.zlogin || handle_error "Failed to remove .zlogin"
+fi
+mv -v /etc/arcolinux-release /etc/lsb-release || handle_error "Failed to move arcolinux-release to lsb-release"
 
 echo "#################################"
 echo "Permission of root set to 700"
 echo "#################################"
-chmod -v 700 /root
+chmod -v 700 /root || handle_error "Failed to set root permission."
 
 echo
 echo "#################################"
