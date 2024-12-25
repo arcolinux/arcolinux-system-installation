@@ -44,10 +44,18 @@ echo "#################################"
 echo "Bluetooth improvements"
 echo "#################################"
 echo
-echo "Autoenable=true in /etc/bluetooth/main.conf"
-sed -i "s/#AutoEnable=true/AutoEnable=true/g" /etc/bluetooth/main.conf || handle_error "Failed to fix bluetooth"
-echo 'load-module module-switch-on-connect' | tee --append /etc/pulse/default.pa || handle_error "Failed to fix bluetooth"
-echo
+
+# Check if /etc/bluetooth/main.conf exists
+if [ -f /etc/bluetooth/main.conf ]; then
+    echo "AutoEnable=true in /etc/bluetooth/main.conf"
+    sed -i "s/#AutoEnable=true/AutoEnable=true/g" /etc/bluetooth/main.conf || handle_error "Failed to fix bluetooth"
+fi
+
+# Check if /etc/pulse/default.pa exists
+if [ -f /etc/pulse/default.pa ]; then
+    echo 'load-module module-switch-on-connect' | tee --append /etc/pulse/default.pa || handle_error "Failed to fix bluetooth"
+fi
+
 echo "#################################"
 echo "Cleanup original files"
 echo "#################################"
