@@ -6,75 +6,50 @@ echo "Start arcolinux-system"
 echo "#################################"
 echo
 
-# Define a function to handle errors
-handle_error() {
-  echo "Error: $1"
-  exit 1
-}
-
 echo
 echo "#################################"
 echo "Permissions of important folders"
 echo "#################################"
-chmod 750 /etc/sudoers.d || handle_error "Failed to change permissions for /etc/sudoers.d"
-chmod 750 /etc/polkit-1/rules.d || handle_error "Failed to change permissions for /etc/polkit-1/rules.d"
-chgrp polkitd /etc/polkit-1/rules.d || handle_error "Failed to change group for /etc/polkit-1/rules.d"
+chmod 750 /etc/sudoers.d
+chmod 750 /etc/polkit-1/rules.d
+chgrp polkitd /etc/polkit-1/rules.d
 echo
-
 echo
 echo "#################################"
 echo "Copy /etc/skel to /root"
 echo "#################################"
-SKEL_DIR="/etc/skel"
-ROOT_DIR="/root"
-cp -aT "$SKEL_DIR/" "$ROOT_DIR/" || handle_error "Failed to copy skel to root."
+cp -aT /etc/skel/ /root/
 echo
 echo "#################################"
 echo "Cleanup autologin root"
 echo "#################################"
-rm -rfv /etc/systemd/system/getty@tty1.service.d || handle_error "Failed to remove autologin"
+rm -rfv /etc/systemd/system/getty@tty1.service.d
 echo
 echo
 echo "#################################"
 echo "Setting editor to nano"
 echo "#################################"
-grep -qxF 'EDITOR=nano' /etc/profile || echo "EDITOR=nano" >> /etc/profile
+echo "EDITOR=nano" >> /etc/profile
 echo
 echo "#################################"
 echo "Bluetooth improvements"
 echo "#################################"
+sed -i "s/#AutoEnable=true/AutoEnable=true/g" /etc/bluetooth/main.conf
+echo 'load-module module-switch-on-connect' | tee --append /etc/pulse/default.pa
 echo
-
-# Check if /etc/bluetooth/main.conf exists
-if [ -f /etc/bluetooth/main.conf ]; then
-    echo "AutoEnable=true in /etc/bluetooth/main.conf"
-    sed -i "s/#AutoEnable=true/AutoEnable=true/g" /etc/bluetooth/main.conf || handle_error "Failed to fix bluetooth"
-fi
-
-# Check if /etc/pulse/default.pa exists
-if [ -f /etc/pulse/default.pa ]; then
-    echo 'load-module module-switch-on-connect' | tee --append /etc/pulse/default.pa || handle_error "Failed to fix bluetooth"
-fi
-
 echo "#################################"
 echo "Cleanup original files"
 echo "#################################"
-rm -fv /etc/sudoers.d/g_wheel || handle_error "Failed to remove g_wheel"
-rm -rfv /usr/share/backgrounds/xfce || handle_error "Failed to remove xfce backgrounds"
-rm -fv /etc/polkit-1/rules.d/49-nopasswd_global.rules || handle_error "Failed to remove nopasswd_global"
-if [ -f /root/.automated_script.sh ]; then
-  rm -v /root/.automated_script.sh || handle_error "Failed to remove automated script"
-fi
-if [ -f /root/.zlogin ]; then
-  rm -v /root/.zlogin || handle_error "Failed to remove .zlogin"
-fi
-mv -v /etc/arcolinux-release /etc/lsb-release || handle_error "Failed to move arcolinux-release to lsb-release"
+rm -fv /etc/sudoers.d/g_wheel
+rm -rfv /usr/share/backgrounds/xfce
+rm -fv /etc/polkit-1/rules.d/49-nopasswd_global.rules
+rm -v /root/{.automated_script.sh,.zlogin}
+mv -v /etc/arcolinux-release /etc/lsb-release
 
 echo "#################################"
 echo "Permission of root set to 700"
 echo "#################################"
-echo "Root permissions set to 700"
-chmod -v 700 /root || handle_error "Failed to set root permission."
+chmod -v 700 /root
 
 echo
 echo "#################################"
