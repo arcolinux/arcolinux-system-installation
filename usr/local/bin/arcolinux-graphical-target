@@ -53,20 +53,6 @@ fi
 
 ##############################################################################################
 
-# chadwm needs to be rebuild before launching
-
-if grep -Fxq "ISO_CODENAME=ArcoLinuxB-chadwm" /etc/dev-rel
-then
-    # code if found
-    echo 'We are on Chadwm - compiling'
-    cd /etc/skel/.config/arco-chadwm/chadwm
-    make -B
-    make install
-else
-    # code if not found
-    echo "nothing to do"
-fi
-
 echo
 echo "#################################"
 echo "End arcolinux-graphical-target"

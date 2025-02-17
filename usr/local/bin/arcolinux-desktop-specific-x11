@@ -14,14 +14,12 @@ case $desktop in
   sed -i "s/theme=white/theme=runes/g" /etc/archlinux-logout.conf
   echo "Changing .bashrc"
   sed -i "s/neofetch/#neofetch/g" /etc/skel/.bashrc
-  #sed -i "s/#ufetch-arco/ufetch-arco | lolcat/g" /etc/skel/.bashrc
     ;;
   chadwm.desktop)
   echo "Changing arcologout theme"
   sed -i "s/theme=white/theme=runes/g" /etc/archlinux-logout.conf
   echo "Changing .bashrc"
   sed -i "s/neofetch/#neofetch/g" /etc/skel/.bashrc
-  #sed -i "s/#paleofetch/paleofetch | lolcat/g" /etc/skel/.bashrc
     ;;
   *)
     echo "Nothing to do"

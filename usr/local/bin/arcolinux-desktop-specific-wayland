@@ -9,16 +9,9 @@ echo "######################################################"
 echo "This is your current desktop file "$desktop
 echo "######################################################"
 
-
-if grep -q "ArcoLinuxB-sway" /etc/dev-rel; then
-  sed -i 's/Exec=sway --unsupported-gpu/Exec=sway/' /usr/share/wayland-sessions/sway.desktop
-fi
-
-if grep -q "ArcoLinuxD" /etc/dev-rel; then
-    if [ -f /usr/share/wayland-sessions/sway.desktop ]; then
-      sed -i 's/Exec=sway --unsupported-gpu/Exec=sway/' /usr/share/wayland-sessions/sway.desktop
-    fi
-fi
+echo "######################################################"
+echo "Script is unused at the moment"
+echo "######################################################"
 
 echo "######################################################"
 echo "End arcolinux-desktop-specific WAYLAND"
